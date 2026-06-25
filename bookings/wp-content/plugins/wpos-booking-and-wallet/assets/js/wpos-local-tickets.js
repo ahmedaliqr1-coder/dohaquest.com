@@ -1,11 +1,11 @@
 /**
- * Doha Quest - Local Tickets Data
- * Intercepts WPOS booking AJAX calls and returns static ticket data
+ * Doha Quest - Local Tickets Data & Cart System
+ * Intercepts WPOS booking AJAX calls and provides full cart/checkout flow
  */
 (function($) {
     "use strict";
 
-    // بيانات التذاكر الحالية
+    // ===== بيانات التذاكر الحالية =====
     var LOCAL_TICKETS = [
         {
             id: 101,
@@ -15,7 +15,6 @@
             currency: "QAR",
             min_qty: 1,
             max_qty: 10,
-            image: "/bookings/wp-content/uploads/2025/12/cat-1.png",
             age_info: "Ages 13+",
             badge: ""
         },
@@ -27,7 +26,6 @@
             currency: "QAR",
             min_qty: 1,
             max_qty: 10,
-            image: "/bookings/wp-content/uploads/2025/12/cat-1.png",
             age_info: "Ages 4–12",
             badge: ""
         },
@@ -39,7 +37,6 @@
             currency: "QAR",
             min_qty: 0,
             max_qty: 10,
-            image: "/bookings/wp-content/uploads/2025/12/cat-1.png",
             age_info: "Under 4 years",
             badge: "FREE"
         },
@@ -51,13 +48,12 @@
             currency: "QAR",
             min_qty: 0,
             max_qty: 10,
-            image: "/bookings/wp-content/uploads/2025/12/cat-1.png",
             age_info: "All ages",
             badge: "ADD-ON"
         }
     ];
 
-    // إنشاء HTML لبطاقة تذكرة واحدة
+    // ===== إنشاء HTML لبطاقة تذكرة =====
     function buildTicketHTML(ticket) {
         var priceDisplay = ticket.price === 0
             ? '<span class="wpos-bw-price" data-price="0">FREE</span>'
@@ -67,35 +63,37 @@
             ? '<span class="wpos-bw-ticket-badge" style="background:#f67c10;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;margin-left:8px;">' + ticket.badge + '</span>'
             : '';
 
+        var qtySection = ticket.price > 0
+            ? '<div class="wpos-bw-product-qty" style="margin-bottom:12px;">' +
+                '<div class="quantity">' +
+                    '<button type="button" class="wpos-bw-qty-btn wpos-bw-minus-qty-js">−</button>' +
+                    '<input type="number" class="qty" value="' + ticket.min_qty + '" min="' + ticket.min_qty + '" max="' + ticket.max_qty + '">' +
+                    '<button type="button" class="wpos-bw-qty-btn wpos-bw-plus-qty-js wpos-bw-plus-qty">+</button>' +
+                '</div>' +
+              '</div>'
+            : '';
+
         var addToCartBtn = ticket.price === 0
-            ? '<button type="button" class="button wpos-wc-add-to-cart-btn" data-product-id="' + ticket.id + '" data-quantity="0" style="opacity:0.6;cursor:default;">Free Entry</button>'
-            : '<button type="button" class="button wpos-wc-add-to-cart-btn" data-product-id="' + ticket.id + '" data-quantity="1">Add to Cart</button>';
+            ? '<button type="button" class="button wpos-wc-add-to-cart-btn" data-product-id="' + ticket.id + '" data-quantity="0" style="opacity:0.6;cursor:default;background:#aaa;border-color:#aaa;">Free Entry – No Booking Required</button>'
+            : '<button type="button" class="button wpos-wc-add-to-cart-btn" data-product-id="' + ticket.id + '" data-quantity="' + ticket.min_qty + '">Add to Cart</button>';
 
         return '<div class="wpos-bw-product-list" data-product-id="' + ticket.id + '">' +
             '<div class="wpos-bw-product-list-inr">' +
                 '<div class="wpos-bw-product-img-wrap">' +
-                    '<img src="' + ticket.image + '" alt="' + ticket.name + '" style="width:100%;border-radius:8px;">' +
+                    '<img src="/bookings/wp-content/uploads/2025/12/cat-1.png" alt="' + ticket.name + '" style="width:100%;border-radius:8px;">' +
                 '</div>' +
                 '<div class="wpos-bw-product-cnt-wrap" style="flex:1;">' +
                     '<div class="wpos-bw-product-ttl" style="font-weight:bold;font-size:16px;margin-bottom:6px;">' +
                         ticket.name + badgeHTML +
                     '</div>' +
-                    '<div class="wpos-bw-product-age" style="color:#666;font-size:13px;margin-bottom:8px;">' + ticket.age_info + '</div>' +
-                    '<div class="wpos-bw-product-desc" style="color:#555;font-size:13px;margin-bottom:12px;">' + ticket.description + '</div>' +
-                    '<div class="wpos-bw-product-price-wrap" style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">' +
-                        '<span style="font-size:13px;color:#888;">Price:</span>' +
+                    '<div style="color:#666;font-size:13px;margin-bottom:8px;">' + ticket.age_info + '</div>' +
+                    '<div style="color:#555;font-size:13px;margin-bottom:12px;">' + ticket.description + '</div>' +
+                    '<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">' +
+                        '<span style="font-size:13px;color:#888;">Price per ticket:</span>' +
                         '<strong style="font-size:18px;color:#5b2d8e;">' + priceDisplay + ' QAR</strong>' +
                     '</div>' +
-                    (ticket.price > 0 ? '<div class="wpos-bw-product-total-wrap" style="font-size:13px;color:#555;margin-bottom:12px;">Total: <strong class="wpos-bw-total-price">' + ticket.price + '.00</strong> QAR</div>' : '') +
-                    (ticket.price > 0 ?
-                        '<div class="wpos-bw-product-qty" style="margin-bottom:12px;">' +
-                            '<div class="quantity">' +
-                                '<button type="button" class="wpos-bw-qty-btn wpos-bw-minus-qty-js">−</button>' +
-                                '<input type="number" class="qty" value="' + ticket.min_qty + '" min="' + ticket.min_qty + '" max="' + ticket.max_qty + '">' +
-                                '<button type="button" class="wpos-bw-qty-btn wpos-bw-plus-qty-js wpos-bw-plus-qty">+</button>' +
-                            '</div>' +
-                        '</div>'
-                    : '') +
+                    (ticket.price > 0 ? '<div style="font-size:13px;color:#555;margin-bottom:12px;">Total: <strong class="wpos-bw-total-price">' + ticket.price + '.00</strong> QAR</div>' : '') +
+                    qtySection +
                     '<div class="wpos-bw-product-add-to-cart">' + addToCartBtn + '</div>' +
                     '<div class="wpos-bw-qty-err" style="display:none;color:red;font-size:12px;">Minimum quantity reached.</div>' +
                 '</div>' +
@@ -103,12 +101,12 @@
         '</div>';
     }
 
-    // إنشاء HTML لكل التذاكر
+    // ===== إنشاء HTML لكل التذاكر =====
     function buildAllTicketsHTML(selectedDate) {
         var html = '<div class="wpos-bw-eg-plus-wrap-inner">';
         html += '<div style="background:#f8f4ff;border-left:4px solid #5b2d8e;padding:12px 16px;margin-bottom:20px;border-radius:4px;">';
         html += '<strong style="color:#5b2d8e;">Visit Date:</strong> <span style="color:#333;">' + selectedDate + '</span>';
-        html += '<br><small style="color:#888;">Tickets will be sent by email. All purchases are non-refundable.</small>';
+        html += '<br><small style="color:#888;margin-top:4px;display:block;">Tickets will be sent by email. All purchases are non-refundable.</small>';
         html += '</div>';
         for (var i = 0; i < LOCAL_TICKETS.length; i++) {
             html += buildTicketHTML(LOCAL_TICKETS[i]);
@@ -117,17 +115,11 @@
         return html;
     }
 
-    // اعتراض AJAX calls الخاصة بـ WPOS
+    // ===== اعتراض AJAX calls =====
     var originalAjax = $.ajax;
     $.ajax = function(settings) {
         if (settings && settings.url && settings.url.indexOf('wpos_wc_bw_get_eg_data_process') !== -1) {
-            // استخراج التاريخ المختار
-            var selectedDate = '';
-            if (settings.data && settings.data.date) {
-                selectedDate = settings.data.date;
-            }
-
-            // تنسيق التاريخ
+            var selectedDate = (settings.data && settings.data.date) ? settings.data.date : '';
             var displayDate = selectedDate;
             if (selectedDate) {
                 try {
@@ -136,13 +128,16 @@
                 } catch(e) {}
             }
 
-            // إعادة بيانات محلية
+            // حفظ التاريخ المختار
+            localStorage.setItem('dq_visit_date', displayDate);
+            localStorage.setItem('dq_visit_date_raw', selectedDate);
+
             var fakeResponse = {
                 success: 1,
                 date: selectedDate,
                 booking_date: displayDate,
                 booking_time: "2:00 PM – 10:00 PM",
-                time_slots: '<div class="wpos-wcb-timeslot-single active" style="background:#5b2d8e;color:#fff;padding:8px 16px;border-radius:20px;display:inline-block;margin:4px;">2:00 PM – 10:00 PM</div>',
+                time_slots: '',
                 plu_html: buildAllTicketsHTML(displayDate),
                 timer_html: '',
                 event_id: '1',
@@ -150,84 +145,107 @@
                 message: ''
             };
 
-            // إخفاء overlay
-            setTimeout(function() {
-                $('.wpos-wc-bw-overlay-wrap').hide();
-            }, 300);
-
-            // استدعاء success callback
+            setTimeout(function() { $('.wpos-wc-bw-overlay-wrap').hide(); }, 300);
             if (settings.success) {
-                setTimeout(function() {
-                    settings.success(fakeResponse);
-                }, 400);
+                setTimeout(function() { settings.success(fakeResponse); }, 400);
             }
-
-            // إرجاع deferred object وهمي
-            return {
-                done: function() { return this; },
-                fail: function() { return this; },
-                always: function() { return this; }
-            };
+            return { done: function() { return this; }, fail: function() { return this; }, always: function() { return this; } };
         }
-
-        // لباقي الـ AJAX calls، نستخدم الأصلي
         return originalAjax.apply(this, arguments);
     };
 
-    // اعتراض $.post أيضاً
     var originalPost = $.post;
     $.post = function(url, data, callback) {
-        if (url && url.indexOf('wpos_wc_bw_month_dates_process') !== -1) {
-            // نتجاهل هذا الطلب - التقويم يعمل بشكل ثابت
+        if (url && (url.indexOf('wpos_wc_bw_month_dates_process') !== -1 || url.indexOf('wpos_wc_bw_timer') !== -1)) {
             return { done: function() { return this; }, fail: function() { return this; } };
         }
         return originalPost.apply(this, arguments);
     };
 
-    // Add to Cart - عرض رسالة تأكيد
+    // ===== سلة التسوق المحلية =====
+    function getCart() {
+        try { return JSON.parse(localStorage.getItem('dq_cart') || '[]'); } catch(e) { return []; }
+    }
+    function saveCart(cart) {
+        localStorage.setItem('dq_cart', JSON.stringify(cart));
+        updateCartBadge();
+    }
+    function updateCartBadge() {
+        var cart = getCart();
+        var total = cart.reduce(function(sum, item) { return sum + item.qty; }, 0);
+        $('.wpos-wc-bw-cart-count, .cart-count, .count').text(total > 0 ? total : '0');
+        // تحديث رابط السلة في الـ header
+        $('a[href*="/bookings/cart/"]').each(function() {
+            var link = $(this);
+            var countEl = link.find('.count');
+            if (countEl.length) countEl.text(total);
+        });
+    }
+
+    // ===== زر Add to Cart =====
     $(document).on('click', '.wpos-wc-add-to-cart-btn', function() {
         var btn = $(this);
+        var productId = parseInt(btn.attr('data-product-id'));
         var productList = btn.closest('.wpos-bw-product-list');
-        var productName = productList.find('.wpos-bw-product-ttl').text().trim();
-        var qty = productList.find('.qty').val() || 1;
-        var price = productList.find('.wpos-bw-price').attr('data-price');
+        var qtyInput = productList.find('.qty');
+        var qty = parseInt(qtyInput.val() || 1);
 
-        if (parseFloat(price) === 0) return;
+        // البحث عن التذكرة
+        var ticket = null;
+        for (var i = 0; i < LOCAL_TICKETS.length; i++) {
+            if (LOCAL_TICKETS[i].id === productId) { ticket = LOCAL_TICKETS[i]; break; }
+        }
+        if (!ticket || ticket.price === 0 || qty < 1) return;
 
-        btn.text('✓ Added!').css('background-color', '#28a745').css('border-color', '#28a745');
+        // إضافة للسلة
+        var cart = getCart();
+        var visitDate = localStorage.getItem('dq_visit_date') || '';
+        var existing = null;
+        for (var j = 0; j < cart.length; j++) {
+            if (cart[j].id === productId) { existing = cart[j]; break; }
+        }
+        if (existing) {
+            existing.qty += qty;
+        } else {
+            cart.push({
+                id: ticket.id,
+                name: ticket.name,
+                price: ticket.price,
+                qty: qty,
+                visitDate: visitDate,
+                ageInfo: ticket.age_info
+            });
+        }
+        saveCart(cart);
 
-        // عرض رسالة في السلة
-        var cartCount = parseInt($('.wpos-wc-bw-cart-count').text() || '0') + parseInt(qty);
-        $('.wpos-wc-bw-cart-count').text(cartCount);
-
+        // تأكيد بصري
+        btn.text('✓ Added to Cart!').css({'background-color':'#28a745','border-color':'#28a745'});
         setTimeout(function() {
-            btn.text('Add to Cart').css('background-color', '').css('border-color', '');
+            btn.text('Add to Cart').css({'background-color':'','border-color':''});
         }, 2000);
 
-        // إضافة للسلة المحلية
-        addToLocalCart(productName, qty, price);
+        // عرض popup صغير
+        showAddedPopup(ticket.name, qty, ticket.price);
     });
 
-    // سلة محلية بسيطة
-    var localCart = [];
-    function addToLocalCart(name, qty, price) {
-        localCart.push({ name: name, qty: qty, price: price });
-        updateCartDisplay();
+    function showAddedPopup(name, qty, price) {
+        var popup = $('<div id="dq-added-popup" style="position:fixed;top:80px;right:20px;background:#5b2d8e;color:#fff;padding:16px 20px;border-radius:8px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:300px;font-family:Montserrat,sans-serif;">' +
+            '<strong style="display:block;margin-bottom:6px;">✓ Added to Cart!</strong>' +
+            '<span style="font-size:13px;">' + qty + 'x ' + name + '</span><br>' +
+            '<span style="font-size:12px;opacity:0.8;">QAR ' + (price * qty).toFixed(2) + '</span>' +
+            '<div style="margin-top:12px;display:flex;gap:8px;">' +
+                '<a href="/bookings/tickets/" style="flex:1;text-align:center;padding:6px;background:rgba(255,255,255,0.2);color:#fff;border-radius:4px;font-size:12px;text-decoration:none;">Continue</a>' +
+                '<a href="/bookings/cart/" style="flex:1;text-align:center;padding:6px;background:#f67c10;color:#fff;border-radius:4px;font-size:12px;text-decoration:none;font-weight:bold;">View Cart →</a>' +
+            '</div>' +
+        '</div>');
+        $('#dq-added-popup').remove();
+        $('body').append(popup);
+        setTimeout(function() { popup.fadeOut(400, function() { popup.remove(); }); }, 4000);
     }
 
-    function updateCartDisplay() {
-        var total = 0;
-        localCart.forEach(function(item) {
-            total += parseFloat(item.price) * parseInt(item.qty);
-        });
-        // تحديث عداد السلة
-        var cartLinks = $('a[href*="/bookings/cart/"]');
-        cartLinks.each(function() {
-            var link = $(this);
-            if (link.find('.count').length) {
-                link.find('.count').text(localCart.length);
-            }
-        });
-    }
+    // تحديث عداد السلة عند تحميل الصفحة
+    $(document).ready(function() {
+        updateCartBadge();
+    });
 
 })(jQuery);

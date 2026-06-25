@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1, minimum-scale=1" name="viewport"/>
 <meta content="noindex, follow" name="robots">
 <!-- This site is optimized with the Yoast SEO plugin v27.6 - https://yoast.com/product/yoast-seo-wordpress/ -->
-<title>Checkout – DohaQuest Tickets</title>
+<title>Order Confirmed – DohaQuest Tickets</title>
 <link href="/bookings/cart/" rel="canonical"/>
 <meta content="en_US" property="og:locale"/>
 <meta content="article" property="og:type"/>
@@ -368,8 +368,6 @@ body, h1, h2, h3, h4, h5, h6, p, a, button, input {
 <div class="entry-content-wrap">
 <div class="entry-content single-content">
 <div class="woocommerce">
-  <div class="woocommerce-notices-wrapper" id="dq-checkout-notices"></div>
-  
   <!-- Breadcrumb -->
   <div class="wpos-wc-bw-step-timer-wrp">
     <div class="wpos-wc-bw-bkn-wrap">
@@ -386,253 +384,128 @@ body, h1, h2, h3, h4, h5, h6, p, a, button, input {
           <a href="/bookings/cart/"><i class="fa-solid fa-cart-plus wpos-wc-bw-icon-left"></i> <span>Cart</span></a>
           <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
         </li>
-        <li class="wpos-wc-bw-bkn active wpos-wc-bw-bkn-link">
+        <li class="wpos-wc-bw-bkn wpos-wc-bw-bkn-link">
           <a href="/bookings/checkout/"><i class="fa-solid fa-credit-card wpos-wc-bw-icon-left"></i> <span>Checkout</span></a>
           <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
         </li>
-        <li class="wpos-wc-bw-bkn">
-          <a href="javascript:void(0);"><i class="fa-solid fa-circle-check wpos-wc-bw-icon-left"></i> <span>Confirmation</span></a>
+        <li class="wpos-wc-bw-bkn active">
+          <a href="/bookings/confirmation/"><i class="fa-solid fa-circle-check wpos-wc-bw-icon-left"></i> <span>Confirmation</span></a>
         </li>
       </ul>
     </div>
   </div>
 
-  <!-- Redirect if empty cart -->
-  <div id="dq-checkout-empty" style="display:none;">
-    <div class="cart-empty woocommerce-info">Your cart is currently empty.</div>
-    <p><a class="button" href="/bookings/">Return to Buy Tickets</a></p>
-  </div>
+  <div id="dq-confirmation-wrap" style="max-width:680px;margin:0 auto;padding:20px 0;">
+    <!-- Success Banner -->
+    <div style="text-align:center;padding:32px 20px;background:linear-gradient(135deg,#5b2d8e,#8b4fc8);border-radius:12px;color:#fff;margin-bottom:32px;">
+      <div style="font-size:56px;margin-bottom:12px;">✅</div>
+      <h2 style="font-size:26px;font-weight:700;margin-bottom:8px;">Order Confirmed!</h2>
+      <p style="font-size:15px;opacity:0.9;margin-bottom:16px;">Thank you for booking with Doha Quest. Your tickets are on their way!</p>
+      <div id="dq-order-number" style="display:inline-block;background:rgba(255,255,255,0.2);padding:8px 20px;border-radius:20px;font-weight:700;font-size:16px;"></div>
+    </div>
 
-  <div id="dq-checkout-form-wrap" style="display:none;">
-    <div style="display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start;" class="dq-checkout-grid">
-      
-      <!-- LEFT: Billing Details -->
-      <div>
-        <h3 style="font-size:20px;font-weight:700;margin-bottom:20px;color:#1a1a1a;border-bottom:2px solid #5b2d8e;padding-bottom:10px;">Billing Details</h3>
-        <form id="dq-checkout-form" novalidate>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div>
-              <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">First Name <abbr title="required" style="color:#c00;">*</abbr></label>
-              <input type="text" id="billing_first_name" required placeholder="First name" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;">
-            </div>
-            <div>
-              <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">Last Name <abbr title="required" style="color:#c00;">*</abbr></label>
-              <input type="text" id="billing_last_name" required placeholder="Last name" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;">
-            </div>
-          </div>
-          <div style="margin-bottom:16px;">
-            <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">Email Address <abbr title="required" style="color:#c00;">*</abbr></label>
-            <input type="email" id="billing_email" required placeholder="your@email.com" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;">
-            <small style="color:#888;font-size:12px;margin-top:4px;display:block;">Your tickets will be sent to this email address.</small>
-          </div>
-          <div style="margin-bottom:16px;">
-            <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">Phone Number <abbr title="required" style="color:#c00;">*</abbr></label>
-            <input type="tel" id="billing_phone" required placeholder="+974 XXXX XXXX" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;">
-          </div>
-          <div style="margin-bottom:16px;">
-            <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">Country</label>
-            <select id="billing_country" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;background:#fff;">
-              <option value="QA" selected>Qatar</option>
-              <option value="SA">Saudi Arabia</option>
-              <option value="AE">United Arab Emirates</option>
-              <option value="KW">Kuwait</option>
-              <option value="BH">Bahrain</option>
-              <option value="OM">Oman</option>
-              <option value="EG">Egypt</option>
-              <option value="GB">United Kingdom</option>
-              <option value="US">United States</option>
-              <option value="OTHER">Other</option>
-            </select>
-          </div>
-
-          <h3 style="font-size:20px;font-weight:700;margin:28px 0 20px;color:#1a1a1a;border-bottom:2px solid #5b2d8e;padding-bottom:10px;">Payment</h3>
-          
-          <!-- Payment Methods -->
-          <div style="border:1px solid #ddd;border-radius:8px;overflow:hidden;margin-bottom:20px;">
-            <div style="padding:16px;background:#f9f9f9;border-bottom:1px solid #eee;">
-              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;">
-                <input type="radio" name="payment_method" value="credit_card" checked style="width:16px;height:16px;accent-color:#5b2d8e;">
-                <span>Credit / Debit Card</span>
-                <span style="margin-left:auto;display:flex;gap:6px;">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/32px-Mastercard-logo.svg.png" alt="Mastercard" style="height:20px;">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/48px-Visa_Inc._logo.svg.png" alt="Visa" style="height:20px;">
-                </span>
-              </label>
-            </div>
-            <div id="card-fields" style="padding:16px;">
-              <div style="margin-bottom:14px;">
-                <label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px;">Card Number <abbr title="required" style="color:#c00;">*</abbr></label>
-                <input type="text" id="card_number" placeholder="1234 5678 9012 3456" maxlength="19" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;" oninput="formatCardNumber(this)">
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                <div>
-                  <label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px;">Expiry Date <abbr title="required" style="color:#c00;">*</abbr></label>
-                  <input type="text" id="card_expiry" placeholder="MM / YY" maxlength="7" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;" oninput="formatExpiry(this)">
-                </div>
-                <div>
-                  <label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px;">CVV <abbr title="required" style="color:#c00;">*</abbr></label>
-                  <input type="text" id="card_cvv" placeholder="123" maxlength="4" style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Terms -->
-          <div style="margin-bottom:20px;">
-            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:#555;">
-              <input type="checkbox" id="terms_agree" required style="margin-top:2px;width:16px;height:16px;accent-color:#5b2d8e;flex-shrink:0;">
-              <span>I have read and agree to the <a href="/en/terms" target="_blank" style="color:#5b2d8e;">Terms and Conditions</a>. Tickets are non-refundable once purchased.</span>
-            </label>
-          </div>
-
-          <div id="dq-form-error" style="display:none;background:#fff0f0;border:1px solid #ffcccc;padding:12px 16px;border-radius:4px;color:#c00;margin-bottom:16px;font-size:14px;"></div>
-
-          <button type="submit" id="dq-place-order-btn" style="width:100%;padding:16px;background:#5b2d8e;color:#fff;border:none;border-radius:4px;font-size:16px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;">
-            Place Order
-          </button>
-        </form>
+    <!-- Order Details -->
+    <div style="background:#fff;border:1px solid #eee;border-radius:8px;overflow:hidden;margin-bottom:24px;">
+      <div style="background:#f8f4ff;padding:14px 20px;border-bottom:1px solid #eee;">
+        <h3 style="font-size:16px;font-weight:700;color:#5b2d8e;margin:0;">Order Details</h3>
       </div>
+      <div id="dq-confirm-details" style="padding:20px;"></div>
+    </div>
 
-      <!-- RIGHT: Order Summary -->
-      <div>
-        <div style="background:#f8f4ff;border-radius:8px;padding:20px;position:sticky;top:20px;">
-          <h3 style="font-size:18px;font-weight:700;margin-bottom:16px;color:#1a1a1a;">Your Order</h3>
-          <div id="dq-visit-date-checkout" style="background:#fff;border-left:3px solid #5b2d8e;padding:10px 14px;margin-bottom:16px;border-radius:4px;font-size:13px;"></div>
-          <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
-            <thead>
-              <tr style="border-bottom:1px solid #ddd;">
-                <th style="text-align:left;padding:8px 4px;font-size:13px;color:#666;">Ticket</th>
-                <th style="text-align:right;padding:8px 4px;font-size:13px;color:#666;">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody id="dq-order-summary-items"></tbody>
-            <tfoot>
-              <tr style="border-top:2px solid #5b2d8e;">
-                <td style="padding:12px 4px;font-weight:700;font-size:15px;">Total</td>
-                <td style="padding:12px 4px;text-align:right;font-weight:700;font-size:16px;color:#5b2d8e;" id="dq-order-total">QAR 0.00</td>
-              </tr>
-            </tfoot>
-          </table>
-          <div style="font-size:11px;color:#888;text-align:center;margin-top:8px;">
-            <span>🔒 Secure Payment</span> &nbsp;|&nbsp; <span>Tickets sent by email</span>
-          </div>
-        </div>
+    <!-- Tickets Summary -->
+    <div style="background:#fff;border:1px solid #eee;border-radius:8px;overflow:hidden;margin-bottom:24px;">
+      <div style="background:#f8f4ff;padding:14px 20px;border-bottom:1px solid #eee;">
+        <h3 style="font-size:16px;font-weight:700;color:#5b2d8e;margin:0;">Tickets Booked</h3>
       </div>
+      <div style="padding:20px;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid #eee;">
+              <th style="text-align:left;padding:8px 4px;font-size:13px;color:#666;font-weight:600;">Ticket</th>
+              <th style="text-align:center;padding:8px 4px;font-size:13px;color:#666;font-weight:600;">Qty</th>
+              <th style="text-align:right;padding:8px 4px;font-size:13px;color:#666;font-weight:600;">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody id="dq-confirm-items"></tbody>
+          <tfoot>
+            <tr style="border-top:2px solid #5b2d8e;">
+              <td colspan="2" style="padding:12px 4px;font-weight:700;font-size:15px;">Total Paid</td>
+              <td style="padding:12px 4px;text-align:right;font-weight:700;font-size:16px;color:#5b2d8e;" id="dq-confirm-total"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- Email Notice -->
+    <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:16px 20px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start;">
+      <span style="font-size:24px;">📧</span>
+      <div>
+        <strong style="display:block;margin-bottom:4px;font-size:14px;">Tickets Sent to Your Email</strong>
+        <span id="dq-confirm-email" style="font-size:13px;color:#555;"></span>
+        <p style="font-size:12px;color:#888;margin-top:6px;margin-bottom:0;">Please check your inbox (and spam folder). Tickets may take a few minutes to arrive.</p>
+      </div>
+    </div>
+
+    <!-- Important Info -->
+    <div style="background:#f0fff4;border:1px solid #c3e6cb;border-radius:8px;padding:16px 20px;margin-bottom:32px;">
+      <strong style="display:block;margin-bottom:10px;font-size:14px;color:#155724;">📌 Important Information</strong>
+      <ul style="margin:0;padding-left:18px;font-size:13px;color:#155724;line-height:1.8;">
+        <li>Please present your ticket (printed or on your phone) at the entrance.</li>
+        <li>Tickets are non-transferable and non-refundable.</li>
+        <li>Arrive at least 15 minutes before your visit.</li>
+        <li>For assistance, contact us at <a href="mailto:sales@dohaquest.com" style="color:#5b2d8e;">sales@dohaquest.com</a></li>
+      </ul>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <a href="/" style="padding:12px 28px;background:#5b2d8e;color:#fff;border-radius:4px;font-weight:600;text-decoration:none;font-size:14px;">← Back to Home</a>
+      <a href="/bookings/" style="padding:12px 28px;background:transparent;border:2px solid #5b2d8e;color:#5b2d8e;border-radius:4px;font-weight:600;text-decoration:none;font-size:14px;">Book More Tickets</a>
     </div>
   </div>
 </div>
 
-<style>
-@media (max-width: 768px) {
-  .dq-checkout-grid { grid-template-columns: 1fr !important; }
-}
-</style>
-
 <script>
 (function() {
-  function getCart() {
-    try { return JSON.parse(localStorage.getItem('dq_cart') || '[]'); } catch(e) { return []; }
-  }
-  
-  function renderSummary() {
-    var cart = getCart();
-    var visitDate = localStorage.getItem('dq_visit_date') || '';
+  document.addEventListener('DOMContentLoaded', function() {
+    var order = null;
+    try { order = JSON.parse(localStorage.getItem('dq_last_order') || 'null'); } catch(e) {}
     
-    if (cart.length === 0) {
-      document.getElementById('dq-checkout-empty').style.display = 'block';
-      document.getElementById('dq-checkout-form-wrap').style.display = 'none';
+    if (!order) {
+      window.location.href = '/bookings/';
       return;
     }
-    document.getElementById('dq-checkout-empty').style.display = 'none';
-    document.getElementById('dq-checkout-form-wrap').style.display = 'block';
     
-    if (visitDate) {
-      document.getElementById('dq-visit-date-checkout').innerHTML = 
-        '<strong style="color:#5b2d8e;">Visit Date:</strong> ' + visitDate;
-    }
+    // Order number
+    document.getElementById('dq-order-number').textContent = 'Order #' + order.orderNumber;
     
-    var tbody = document.getElementById('dq-order-summary-items');
-    var total = 0;
+    // Order details
+    document.getElementById('dq-confirm-details').innerHTML =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px;">' +
+        '<div><span style="color:#888;display:block;font-size:12px;margin-bottom:2px;">Customer Name</span><strong>' + order.firstName + ' ' + order.lastName + '</strong></div>' +
+        '<div><span style="color:#888;display:block;font-size:12px;margin-bottom:2px;">Order Date</span><strong>' + order.orderDate + '</strong></div>' +
+        '<div><span style="color:#888;display:block;font-size:12px;margin-bottom:2px;">Visit Date</span><strong>' + (order.visitDate || 'N/A') + '</strong></div>' +
+        '<div><span style="color:#888;display:block;font-size:12px;margin-bottom:2px;">Phone</span><strong>' + order.phone + '</strong></div>' +
+      '</div>';
+    
+    // Email
+    document.getElementById('dq-confirm-email').textContent = 'Tickets sent to: ' + order.email;
+    
+    // Items
+    var tbody = document.getElementById('dq-confirm-items');
     var rows = '';
-    cart.forEach(function(item) {
-      var subtotal = item.price * item.qty;
-      total += subtotal;
-      rows += '<tr><td style="padding:8px 4px;font-size:13px;">' + item.qty + 'x ' + item.name + '</td>' +
-              '<td style="padding:8px 4px;text-align:right;font-size:13px;font-weight:600;">QAR ' + subtotal.toFixed(2) + '</td></tr>';
+    (order.items || []).forEach(function(item) {
+      var sub = item.price * item.qty;
+      rows += '<tr><td style="padding:10px 4px;font-size:13px;border-bottom:1px solid #f5f5f5;">' + item.name + '</td>' +
+              '<td style="padding:10px 4px;text-align:center;font-size:13px;border-bottom:1px solid #f5f5f5;">' + item.qty + '</td>' +
+              '<td style="padding:10px 4px;text-align:right;font-size:13px;font-weight:600;border-bottom:1px solid #f5f5f5;">QAR ' + sub.toFixed(2) + '</td></tr>';
     });
     tbody.innerHTML = rows;
-    document.getElementById('dq-order-total').textContent = 'QAR ' + total.toFixed(2);
-  }
-  
-  // Format card number
-  window.formatCardNumber = function(input) {
-    var v = input.value.replace(/\D/g, '').substring(0, 16);
-    input.value = v.replace(/(\d{4})/g, '$1 ').trim();
-  };
-  
-  // Format expiry
-  window.formatExpiry = function(input) {
-    var v = input.value.replace(/\D/g, '').substring(0, 4);
-    if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
-    input.value = v;
-  };
-  
-  // Form submit
-  document.addEventListener('DOMContentLoaded', function() {
-    renderSummary();
+    document.getElementById('dq-confirm-total').textContent = 'QAR ' + (order.total || 0).toFixed(2);
     
-    var form = document.getElementById('dq-checkout-form');
-    if (!form) return;
-    
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      var errEl = document.getElementById('dq-form-error');
-      errEl.style.display = 'none';
-      
-      var firstName = document.getElementById('billing_first_name').value.trim();
-      var lastName = document.getElementById('billing_last_name').value.trim();
-      var email = document.getElementById('billing_email').value.trim();
-      var phone = document.getElementById('billing_phone').value.trim();
-      var cardNum = document.getElementById('card_number').value.trim();
-      var cardExp = document.getElementById('card_expiry').value.trim();
-      var cardCvv = document.getElementById('card_cvv').value.trim();
-      var terms = document.getElementById('terms_agree').checked;
-      
-      if (!firstName || !lastName) { showError('Please enter your full name.'); return; }
-      if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
-      if (!phone) { showError('Please enter your phone number.'); return; }
-      if (!cardNum || cardNum.replace(/\s/g,'').length < 16) { showError('Please enter a valid card number.'); return; }
-      if (!cardExp || cardExp.length < 7) { showError('Please enter a valid expiry date.'); return; }
-      if (!cardCvv || cardCvv.length < 3) { showError('Please enter a valid CVV.'); return; }
-      if (!terms) { showError('Please agree to the Terms and Conditions.'); return; }
-      
-      // حفظ بيانات الطلب
-      var cart = getCart();
-      var total = cart.reduce(function(s,i){ return s + i.price*i.qty; }, 0);
-      var orderData = {
-        orderNumber: 'DQ-' + Date.now().toString().slice(-8),
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        phone: phone,
-        visitDate: localStorage.getItem('dq_visit_date') || '',
-        items: cart,
-        total: total,
-        orderDate: new Date().toLocaleDateString('en-GB', {year:'numeric',month:'long',day:'numeric'})
-      };
-      localStorage.setItem('dq_last_order', JSON.stringify(orderData));
-      localStorage.removeItem('dq_cart');
-      
-      // توجيه لصفحة التأكيد
-      window.location.href = '/bookings/confirmation/';
-    });
-    
-    function showError(msg) {
-      var errEl = document.getElementById('dq-form-error');
-      errEl.textContent = msg;
-      errEl.style.display = 'block';
-      errEl.scrollIntoView({behavior:'smooth', block:'center'});
-    }
+    // Clear order from storage after displaying
+    // (keep for a bit in case user refreshes)
   });
 })();
 </script>

@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1, minimum-scale=1" name="viewport"/>
 <meta content="noindex, follow" name="robots">
 <!-- This site is optimized with the Yoast SEO plugin v27.6 - https://yoast.com/product/yoast-seo-wordpress/ -->
-<title>Cart - DohaQuest Tickets</title>
+<title>Cart – DohaQuest Tickets</title>
 <link href="/bookings/cart/" rel="canonical"/>
 <meta content="en_US" property="og:locale"/>
 <meta content="article" property="og:type"/>
@@ -367,22 +367,155 @@ body, h1, h2, h3, h4, h5, h6, p, a, button, input {
 <article class="entry content-bg single-entry post-77 page type-page status-publish has-post-thumbnail hentry" id="post-77">
 <div class="entry-content-wrap">
 <div class="entry-content single-content">
-<div class="woocommerce"><div class="woocommerce-notices-wrapper"></div><div class="wc-empty-cart-message">
-<div class="cart-empty woocommerce-info" role="status">
-		Your cart is currently empty.	</div>
-</div> <p class="return-to-shop">
-<a class="button wc-backward" href="/bookings/">
-			Return to Buy Tickets		</a>
-</p>
+<div class="woocommerce">
+  <div class="woocommerce-notices-wrapper" id="dq-cart-notices"></div>
+  
+  <!-- Breadcrumb -->
+  <div class="wpos-wc-bw-step-timer-wrp">
+    <div class="wpos-wc-bw-bkn-wrap">
+      <ul>
+        <li class="wpos-wc-bw-bkn wpos-wc-bw-bkn-link">
+          <a href="/bookings/"><i class="fa-solid fa-bars wpos-wc-bw-icon-left"></i> <span>Category</span></a>
+          <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+        </li>
+        <li class="wpos-wc-bw-bkn wpos-wc-bw-bkn-link">
+          <a href="/bookings/tickets/"><i class="fa-solid fa-ticket wpos-wc-bw-icon-left"></i> <span>Tickets</span></a>
+          <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+        </li>
+        <li class="wpos-wc-bw-bkn active wpos-wc-bw-bkn-link">
+          <a href="/bookings/cart/"><i class="fa-solid fa-cart-plus wpos-wc-bw-icon-left"></i> <span>Cart</span></a>
+          <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+        </li>
+        <li class="wpos-wc-bw-bkn">
+          <a href="javascript:void(0);"><i class="fa-solid fa-credit-card wpos-wc-bw-icon-left"></i> <span>Checkout</span></a>
+          <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+        </li>
+        <li class="wpos-wc-bw-bkn">
+          <a href="javascript:void(0);"><i class="fa-solid fa-circle-check wpos-wc-bw-icon-left"></i> <span>Confirmation</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Cart Content -->
+  <div id="dq-cart-empty" style="display:none;">
+    <div class="cart-empty woocommerce-info" role="status">Your cart is currently empty.</div>
+    <p class="return-to-shop">
+      <a class="button wc-backward" href="/bookings/">Return to Buy Tickets</a>
+    </p>
+  </div>
+
+  <div id="dq-cart-content" style="display:none;">
+    <!-- Visit Date Info -->
+    <div id="dq-visit-date-info" style="background:#f8f4ff;border-left:4px solid #5b2d8e;padding:12px 16px;margin-bottom:24px;border-radius:4px;"></div>
+
+    <!-- Cart Table -->
+    <table class="shop_table shop_table_responsive cart woocommerce-cart-form__contents" style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+      <thead>
+        <tr>
+          <th style="padding:12px;text-align:left;border-bottom:2px solid #eee;font-weight:600;">Ticket</th>
+          <th style="padding:12px;text-align:center;border-bottom:2px solid #eee;font-weight:600;">Price</th>
+          <th style="padding:12px;text-align:center;border-bottom:2px solid #eee;font-weight:600;">Quantity</th>
+          <th style="padding:12px;text-align:right;border-bottom:2px solid #eee;font-weight:600;">Subtotal</th>
+          <th style="padding:12px;text-align:center;border-bottom:2px solid #eee;"></th>
+        </tr>
+      </thead>
+      <tbody id="dq-cart-items"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="padding:16px 12px;text-align:right;font-weight:bold;font-size:16px;border-top:2px solid #eee;">Total:</td>
+          <td style="padding:16px 12px;text-align:right;font-weight:bold;font-size:18px;color:#5b2d8e;border-top:2px solid #eee;" id="dq-cart-total">QAR 0.00</td>
+          <td style="border-top:2px solid #eee;"></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- Cart Actions -->
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px;">
+      <a href="/bookings/tickets/" class="button" style="background:transparent;border:2px solid #5b2d8e;color:#5b2d8e;padding:12px 24px;border-radius:4px;font-weight:600;text-decoration:none;">
+        ← Continue Shopping
+      </a>
+      <a href="/bookings/checkout/" id="dq-proceed-checkout" class="button" style="background:#5b2d8e;color:#fff;padding:12px 32px;border-radius:4px;font-weight:600;font-size:16px;text-decoration:none;">
+        Proceed to Checkout →
+      </a>
+    </div>
+  </div>
 </div>
-</div><!-- .entry-content -->
-</div>
-</article><!-- #post-77 -->
-</div>
-</div><!-- #main -->
-</div>
-</div><!-- #primary -->
-</main><!-- #inner-wrap -->
+
+<script>
+(function() {
+  function getCart() {
+    try { return JSON.parse(localStorage.getItem('dq_cart') || '[]'); } catch(e) { return []; }
+  }
+  function saveCart(cart) {
+    localStorage.setItem('dq_cart', JSON.stringify(cart));
+  }
+  function renderCart() {
+    var cart = getCart();
+    var visitDate = localStorage.getItem('dq_visit_date') || '';
+    
+    if (cart.length === 0) {
+      document.getElementById('dq-cart-empty').style.display = 'block';
+      document.getElementById('dq-cart-content').style.display = 'none';
+      return;
+    }
+    
+    document.getElementById('dq-cart-empty').style.display = 'none';
+    document.getElementById('dq-cart-content').style.display = 'block';
+    
+    // Visit date
+    if (visitDate) {
+      document.getElementById('dq-visit-date-info').innerHTML = 
+        '<strong style="color:#5b2d8e;">Visit Date:</strong> ' + visitDate +
+        '<br><small style="color:#888;">Tickets will be sent by email. All purchases are non-refundable.</small>';
+    }
+    
+    // Cart items
+    var tbody = document.getElementById('dq-cart-items');
+    var total = 0;
+    var rows = '';
+    cart.forEach(function(item, idx) {
+      var subtotal = item.price * item.qty;
+      total += subtotal;
+      rows += '<tr data-idx="' + idx + '">' +
+        '<td style="padding:14px 12px;border-bottom:1px solid #eee;"><strong>' + item.name + '</strong><br><small style="color:#888;">' + (item.ageInfo || '') + '</small></td>' +
+        '<td style="padding:14px 12px;text-align:center;border-bottom:1px solid #eee;">QAR ' + item.price.toFixed(2) + '</td>' +
+        '<td style="padding:14px 12px;text-align:center;border-bottom:1px solid #eee;">' +
+          '<div style="display:flex;align-items:center;justify-content:center;gap:8px;">' +
+            '<button onclick="changeQty(' + idx + ',-1)" style="width:28px;height:28px;border:1px solid #ccc;background:#f5f5f5;cursor:pointer;border-radius:4px;font-size:16px;">−</button>' +
+            '<span id="qty-' + idx + '" style="min-width:24px;text-align:center;font-weight:bold;">' + item.qty + '</span>' +
+            '<button onclick="changeQty(' + idx + ',1)" style="width:28px;height:28px;border:1px solid #ccc;background:#f5f5f5;cursor:pointer;border-radius:4px;font-size:16px;">+</button>' +
+          '</div>' +
+        '</td>' +
+        '<td style="padding:14px 12px;text-align:right;border-bottom:1px solid #eee;font-weight:600;" id="sub-' + idx + '">QAR ' + subtotal.toFixed(2) + '</td>' +
+        '<td style="padding:14px 12px;text-align:center;border-bottom:1px solid #eee;">' +
+          '<button onclick="removeItem(' + idx + ')" style="background:none;border:none;color:#c00;cursor:pointer;font-size:18px;" title="Remove">✕</button>' +
+        '</td>' +
+      '</tr>';
+    });
+    tbody.innerHTML = rows;
+    document.getElementById('dq-cart-total').textContent = 'QAR ' + total.toFixed(2);
+  }
+  
+  window.changeQty = function(idx, delta) {
+    var cart = getCart();
+    if (!cart[idx]) return;
+    cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+    saveCart(cart);
+    renderCart();
+  };
+  
+  window.removeItem = function(idx) {
+    var cart = getCart();
+    cart.splice(idx, 1);
+    saveCart(cart);
+    renderCart();
+  };
+  
+  renderCart();
+})();
+</script>
+</div><!-- .entry-content --></main><!-- #inner-wrap -->
 <footer class="site-footer" id="colophon" role="contentinfo">
 <div class="site-footer-wrap">
 </div>
