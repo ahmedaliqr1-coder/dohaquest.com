@@ -270,54 +270,99 @@ body, h1, h2, h3, h4, h5, h6, p, a, button, input {
 
 <!-- Override ticket card layout to vertical -->
 <style id='dq-ticket-override'>
-.dq-ticket-card {
-    display: block !important;
-    padding: 16px 0 !important;
-    border-bottom: 1px solid #e5e5e5 !important;
-    background: #fff !important;
-    gap: 0 !important;
-}
-.dq-ticket-img-wrap {
-    width: 100% !important;
-    height: auto !important;
-    overflow: hidden !important;
-    border-radius: 8px !important;
-    margin-bottom: 12px !important;
-    flex-shrink: unset !important;
-}
-.dq-ticket-img-wrap img {
-    width: 100% !important;
-    height: 180px !important;
-    object-fit: cover !important;
-    display: block !important;
-    max-width: 100% !important;
-    border-radius: 8px !important;
-}
-.dq-ticket-info {
-    display: block !important;
-    width: 100% !important;
-    flex: unset !important;
-    min-width: unset !important;
-}
+/* مطابقة الموقع الأصلي - flex row */
 .wpos-bw-product-list {
     display: block !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    padding: 15px 0 !important;
+    margin: 0 !important;
 }
 .wpos-bw-product-list-inr {
-    display: block !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
 }
 .wpos-bw-product-img-wrap {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-bottom: 12px !important;
-    flex-shrink: unset !important;
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
 }
 .wpos-bw-product-img-wrap img {
-    width: 100% !important;
-    height: 180px !important;
+    width: 120px !important;
+    height: 120px !important;
     object-fit: cover !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     display: block !important;
-    max-width: 100% !important;
+}
+.wpos-bw-product-cnt-wrap {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+/* أزرار الكمية - أصفر مثل الأصلي */
+.wpos-bw-qty-btn {
+    background: #f5c518 !important;
+    color: #333 !important;
+    border: none !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.wpos-bw-qty-btn:hover { background: #e6b800 !important; }
+.wpos-bw-qty-input {
+    background: #f5c518 !important;
+    border: none !important;
+    width: 40px !important;
+    height: 32px !important;
+    text-align: center !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    border-left: 1px solid #e0a800 !important;
+    border-right: 1px solid #e0a800 !important;
+}
+.wpos-bw-qty-wrap {
+    display: inline-flex !important;
+    align-items: center !important;
+    border: 1px solid #e0a800 !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+}
+/* إخفاء dq-ticket-card القديم */
+.dq-ticket-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+    padding: 15px 0 !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+}
+.dq-ticket-img-wrap {
+    width: 120px !important;
+    min-width: 120px !important;
+    height: 120px !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+}
+.dq-ticket-img-wrap img {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: cover !important;
+    border-radius: 6px !important;
+    display: block !important;
+}
+.dq-ticket-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: block !important;
 }
 </style>
 </head>
@@ -895,28 +940,33 @@ const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(
 		</script>
 <script src="/bookings/wp-content/plugins/wpos-booking-and-wallet/assets/js/wpos-local-tickets.js?ver=2.0"></script>
 <script>
-// Override ticket card layout after all scripts load
+// Override ticket card layout - match original site exactly
 (function() {
     function fixTicketLayout() {
-        // Add override style at end of head to beat !important from plugin
+        var existing = document.getElementById('dq-ticket-fix-final');
+        if (existing) existing.remove();
         var style = document.createElement('style');
         style.id = 'dq-ticket-fix-final';
         style.textContent = [
-            '.dq-ticket-card { display: block !important; gap: 0 !important; }',
-            '.dq-ticket-img-wrap { width: 100% !important; height: auto !important; flex-shrink: unset !important; margin-bottom: 12px !important; }',
-            '.dq-ticket-img-wrap img { width: 100% !important; height: 180px !important; max-width: 100% !important; }',
-            '.dq-ticket-info { display: block !important; width: 100% !important; flex: unset !important; min-width: unset !important; }',
-            '.wpos-bw-product-list { display: block !important; }',
-            '.wpos-bw-product-list-inr { display: block !important; }',
-            '.wpos-bw-product-img-wrap { width: 100% !important; flex-shrink: unset !important; margin-bottom: 12px !important; }',
-            '.wpos-bw-product-img-wrap img { width: 100% !important; height: 180px !important; max-width: 100% !important; }'
+            /* flex row - original layout */
+            '.wpos-bw-product-list-inr { display: flex !important; flex-direction: row !important; align-items: flex-start !important; gap: 15px !important; }',
+            '.wpos-bw-product-img-wrap { width: 120px !important; min-width: 120px !important; max-width: 120px !important; flex-shrink: 0 !important; margin: 0 !important; }',
+            '.wpos-bw-product-img-wrap img { width: 120px !important; height: 120px !important; object-fit: cover !important; border-radius: 6px !important; display: block !important; }',
+            '.wpos-bw-product-cnt-wrap { flex: 1 !important; min-width: 0 !important; }',
+            /* yellow qty buttons */
+            '.wpos-bw-qty-btn { background: #f5c518 !important; color: #333 !important; border: none !important; width: 32px !important; height: 32px !important; font-size: 18px !important; font-weight: bold !important; cursor: pointer !important; border-radius: 0 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; }',
+            '.wpos-bw-qty-input { background: #f5c518 !important; border: none !important; border-left: 1px solid #e0a800 !important; border-right: 1px solid #e0a800 !important; width: 40px !important; height: 32px !important; text-align: center !important; font-size: 14px !important; font-weight: 600 !important; color: #333 !important; }',
+            '.wpos-bw-qty-wrap { display: inline-flex !important; align-items: center !important; border: 1px solid #e0a800 !important; border-radius: 4px !important; overflow: hidden !important; }',
+            /* old dq-ticket-card */
+            '.dq-ticket-card { display: flex !important; flex-direction: row !important; align-items: flex-start !important; gap: 15px !important; padding: 15px 0 !important; border-bottom: 1px solid #e5e5e5 !important; }',
+            '.dq-ticket-img-wrap { width: 120px !important; min-width: 120px !important; height: 120px !important; flex-shrink: 0 !important; margin: 0 !important; }',
+            '.dq-ticket-img-wrap img { width: 120px !important; height: 120px !important; object-fit: cover !important; border-radius: 6px !important; display: block !important; }',
+            '.dq-ticket-info { flex: 1 !important; min-width: 0 !important; display: block !important; }'
         ].join('\n');
         document.head.appendChild(style);
     }
-    // Run immediately and also after AJAX loads tickets
     fixTicketLayout();
     document.addEventListener('DOMContentLoaded', fixTicketLayout);
-    // Watch for ticket cards being added dynamically
     var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(m) {
             if (m.addedNodes.length) { fixTicketLayout(); }
