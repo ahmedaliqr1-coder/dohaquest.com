@@ -736,19 +736,28 @@ const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(
 		
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // جلب التذاكر من localStorage
-    var cart = JSON.parse(localStorage.getItem('dq_cart') || '{}');
-    var date = localStorage.getItem('dq_visit_date') || '';
+    // جلب التذاكر من localStorage - يدعم array و object
+    var rawCart = localStorage.getItem('dq_cart');
+    var cartData;
+    try { cartData = JSON.parse(rawCart || '[]'); } catch(e) { cartData = []; }
     
+    // تحويل إلى array إذا كان object
+    var items;
+    if (Array.isArray(cartData)) {
+        items = cartData.filter(function(item) { return item && item.qty > 0; });
+    } else {
+        items = Object.values(cartData).filter(function(item) { return item && item.qty > 0; });
+    }
+    
+    var date = localStorage.getItem('dq_visit_date') || '';
     var cartTable = document.querySelector('.woocommerce-cart-form');
     var emptyMsg = document.querySelector('.woocommerce-info');
     
     if (!cartTable) return;
     
-    var items = Object.values(cart).filter(function(item) { return item.qty > 0; });
-    
     if (items.length === 0) {
-        // السلة فارغة - نظهر رسالة مع زر العودة
+        var tbody0 = cartTable.querySelector('tbody');
+        if (tbody0) tbody0.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;">Your cart is empty. <a href="/bookings/tickets/" style="color:#5b2d8e;">Browse tickets</a></td></tr>';
         return;
     }
     
@@ -761,12 +770,16 @@ document.addEventListener('DOMContentLoaded', function() {
     items.forEach(function(item) {
         var subtotal = item.price * item.qty;
         total += subtotal;
+        var itemId = item.id !== undefined ? item.id : item.name;
         rows += '<tr class="woocommerce-cart-form__cart-item cart_item">' +
-            '<td class="product-remove"><a href="#" class="remove" data-id="' + item.id + '" aria-label="Remove this item">×</a></td>' +
-            '<td class="product-thumbnail"><img src="/bookings/wp-content/uploads/2026/04/ticket-icon.png" width="64" height="64" alt="' + item.name + '" onerror="this.style.display='none'"></td>' +
-            '<td class="product-name"><a href="#">' + item.name + '</a>' + (date ? '<br><small>Visit Date: ' + date + '</small>' : '') + '</td>' +
+            '<td class="product-remove"><a href="#" class="remove" data-id="' + itemId + '" aria-label="Remove this item">×</a></td>' +
+            '<td class="product-thumbnail"><img src="/bookings/wp-content/uploads/2025/12/cat-1.png" width="64" height="64" alt="' + item.name + '" style="border-radius:4px;"></td>' +
+            '<td class="product-name"><a href="#">' + item.name + '</a>' +
+                (date ? '<br><small style="color:#888;">Visit Date: ' + date + '</small>' : '') +
+                (item.ageInfo ? '<br><small style="color:#aaa;">' + item.ageInfo + '</small>' : '') +
+            '</td>' +
             '<td class="product-price"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;' + item.price.toFixed(2) + '</bdi></span></td>' +
-            '<td class="product-quantity"><div class="quantity"><input type="number" class="input-text qty text" value="' + item.qty + '" min="0" max="99" data-id="' + item.id + '"></div></td>' +
+            '<td class="product-quantity"><div class="quantity"><input type="number" class="input-text qty text" value="' + item.qty + '" min="0" max="99" data-id="' + itemId + '"></div></td>' +
             '<td class="product-subtotal"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;' + subtotal.toFixed(2) + '</bdi></span></td>' +
         '</tr>';
     });
@@ -797,10 +810,18 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.remove').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            var id = this.getAttribute('data-id');
-            var cart = JSON.parse(localStorage.getItem('dq_cart') || '{}');
-            delete cart[id];
-            localStorage.setItem('dq_cart', JSON.stringify(cart));
+            var removeId = this.getAttribute('data-id');
+            var rawCart2 = localStorage.getItem('dq_cart');
+            var cartData2;
+            try { cartData2 = JSON.parse(rawCart2 || '[]'); } catch(e2) { cartData2 = []; }
+            if (Array.isArray(cartData2)) {
+                cartData2 = cartData2.filter(function(it) {
+                    return String(it.id !== undefined ? it.id : it.name) !== String(removeId);
+                });
+            } else {
+                delete cartData2[removeId];
+            }
+            localStorage.setItem('dq_cart', JSON.stringify(cartData2));
             location.reload();
         });
     });
@@ -808,15 +829,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // تحديث الكمية
     document.querySelectorAll('.qty').forEach(function(input) {
         input.addEventListener('change', function() {
-            var id = this.getAttribute('data-id');
+            var updateId = this.getAttribute('data-id');
             var qty = parseInt(this.value) || 0;
-            var cart = JSON.parse(localStorage.getItem('dq_cart') || '{}');
-            if (cart[id]) {
-                if (qty <= 0) delete cart[id];
-                else cart[id].qty = qty;
-                localStorage.setItem('dq_cart', JSON.stringify(cart));
-                location.reload();
+            var rawCart3 = localStorage.getItem('dq_cart');
+            var cartData3;
+            try { cartData3 = JSON.parse(rawCart3 || '[]'); } catch(e3) { cartData3 = []; }
+            if (Array.isArray(cartData3)) {
+                if (qty <= 0) {
+                    cartData3 = cartData3.filter(function(it) {
+                        return String(it.id !== undefined ? it.id : it.name) !== String(updateId);
+                    });
+                } else {
+                    cartData3.forEach(function(it) {
+                        if (String(it.id !== undefined ? it.id : it.name) === String(updateId)) it.qty = qty;
+                    });
+                }
+            } else {
+                if (cartData3[updateId]) {
+                    if (qty <= 0) delete cartData3[updateId];
+                    else cartData3[updateId].qty = qty;
+                }
             }
+            localStorage.setItem('dq_cart', JSON.stringify(cartData3));
+            location.reload();
         });
     });
 });

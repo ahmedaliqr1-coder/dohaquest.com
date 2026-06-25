@@ -808,9 +808,16 @@ const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(
 		
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var cart = JSON.parse(localStorage.getItem('dq_cart') || '{}');
+    var rawCartCO = localStorage.getItem('dq_cart');
+    var cartDataCO;
+    try { cartDataCO = JSON.parse(rawCartCO || '[]'); } catch(e) { cartDataCO = []; }
+    var items;
+    if (Array.isArray(cartDataCO)) {
+        items = cartDataCO.filter(function(i) { return i && i.qty > 0; });
+    } else {
+        items = Object.values(cartDataCO).filter(function(i) { return i && i.qty > 0; });
+    }
     var date = localStorage.getItem('dq_visit_date') || '';
-    var items = Object.values(cart).filter(function(i) { return i.qty > 0; });
     
     // عرض الطلب في جانب Order Review
     var orderTable = document.querySelector('.woocommerce-checkout-review-order-table');
