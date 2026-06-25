@@ -551,7 +551,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>					</div>
 											<div class="wpos-bw-booking-right">
 							<div class="widget woocommerce widget_shopping_cart">
-								<div class="widget_shopping_cart_content"></div>
+								<div class="widget_shopping_cart_content"><div class="wpos-wc-bw-cart-widget">
+	
+		<p class="woocommerce-mini-cart__empty-message">No products in the cart.</p>
+
+		<p class="woocommerce-mini-cart__total total">
+			<strong>Amount:</strong> 
+			<span class="woocommerce-Price-amount amount">00.00</span>
+		</p>
+	</div>
+</div>
 							</div>
 						</div>
 									</div>
@@ -973,6 +982,57 @@ const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(
         });
     });
     observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+<script>
+// تحديث الـ cart widget من localStorage
+(function() {
+    function updateCartWidget() {
+        var cartData = localStorage.getItem('dq_cart');
+        var visitDate = localStorage.getItem('dq_visit_date') || '';
+        var widget = document.querySelector('.widget_shopping_cart_content');
+        if (!widget) return;
+        
+        var items = [];
+        try { items = JSON.parse(cartData) || []; } catch(e) { items = []; }
+        
+        if (!Array.isArray(items)) items = [];
+        items = items.filter(function(i) { return i && i.qty > 0; });
+        
+        if (items.length === 0) {
+            widget.innerHTML = '<div class="wpos-wc-bw-cart-widget">\n\t\n\t\t<p class="woocommerce-mini-cart__empty-message">No products in the cart.</p>\n\n\t\t<p class="woocommerce-mini-cart__total total">\n\t\t\t<strong>Amount:</strong> \n\t\t\t<span class="woocommerce-Price-amount amount">00.00</span>\n\t\t</p>\n\t</div>';
+        } else {
+            var total = 0;
+            var itemsHtml = '';
+            items.forEach(function(item) {
+                total += (item.price || 0) * (item.qty || 0);
+                itemsHtml += '<li class="woocommerce-mini-cart-item mini_cart_item">' +
+                    '<div class="cart-item-details"><div class="cart-items">' +
+                    '<a class="product-title">' + item.name + '</a>' +
+                    '<div class="variation"><div class="variation-VisitDate"><dt>Visit Date:</dt><dd>' + visitDate + '</dd></div></div>' +
+                    '</div><div class="cart-item-qty">' +
+                    '<span class="quantity">' + item.qty + ' × <span class="woocommerce-Price-amount amount">QAR ' + parseFloat(item.price).toFixed(2) + '</span></span>' +
+                    '</div></div></li>';
+            });
+            widget.innerHTML = '<div class="wpos-wc-bw-cart-widget">' +
+                '<ul class="woocommerce-mini-cart cart_list product_list_widget">' + itemsHtml + '</ul>' +
+                '<p class="woocommerce-mini-cart__total total"><strong>Amount:</strong> <span class="woocommerce-Price-amount amount">QAR ' + total.toFixed(2) + '</span></p>' +
+                '<p class="wpos-wc-bw-action-btn"><a href="/bookings/cart/" class="button wc-forward">View cart</a></p>' +
+                '</div>';
+        }
+    }
+    
+    // تحديث عند تحميل الصفحة
+    updateCartWidget();
+    document.addEventListener('DOMContentLoaded', updateCartWidget);
+    
+    // تحديث عند تغيير localStorage
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'dq_cart') updateCartWidget();
+    });
+    
+    // تحديث كل ثانية لالتقاط التغييرات
+    setInterval(updateCartWidget, 1000);
 })();
 </script>
 </body>
