@@ -461,7 +461,12 @@ function wpos_wc_bw_datepicker_ajax( this_ele, date, select_type, form_data ) {
 						cls_ele.find('.wpos-wcb-booking-date').val( result.date );
 						cls_ele.attr( 'data-visit-date', result.date );
 						cls_ele.find('.wpos-wcb-timeslot-wrap').html( result.time_slots );
-						cls_ele.find('.wpos-bw-eg-plus-wrap').html( result.plu_html );
+						// DohaQuest: إصلاح أسماء التذاكر لتطابق الموقع الأصلي
+					var fixed_html = result.plu_html || '';
+					fixed_html = fixed_html.replace(/General Admission/g, 'Online Admission');
+					fixed_html = fixed_html.replace(/Time Portal – Fast Track Add-on/g, 'iFLY Quest – Non-Quest Ticket Holder');
+					fixed_html = fixed_html.replace(/Skip the queues on specific rides! Add this fast-track ticket to your booking for an enhanced experience\./g, 'Experience the thrill of indoor skydiving at iFLY Doha. This ticket is for guests who do not hold a Quest admission ticket.');
+					cls_ele.find('.wpos-bw-eg-plus-wrap').html( fixed_html );
 
 					} else {
 						cls_ele.find('.wpos-wcb-timeslot-wrap').html('<div class="wpos-wcb-no-data-notice">'+ result.message +'</div>');

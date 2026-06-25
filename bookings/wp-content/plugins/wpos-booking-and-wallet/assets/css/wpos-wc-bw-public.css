@@ -358,8 +358,8 @@ dl.variation dt, dl.variation dd p{font-size: 15px;}
 .wpos-bw-available-tickets{display: none; margin-top: 15px; text-align: center; font-weight: bold; font-size: 22px; font-family: "Roboto Condensed", sans-serif;}
 /*.wpos-bw-exp-product-wrap{margin-top: 30px;}*/
 .wpos-wc-bw-addons .wpos-bw-exp-product-wrap{margin-top: 0;}
-.wpos-bw-product-list-inr{display: block; margin-bottom: 0; background-color: transparent; padding: 0;}
-.wpos-bw-product-list-inr .wpos-bw-product-img-wrap{max-width: 100%; width: 100%; position: relative;}
+.wpos-bw-product-list-inr{display: flex; gap: 20px; align-items: center; margin-bottom: 25px; background-color: #EEEBE4; padding: 25px 15px;}
+.wpos-bw-product-list-inr .wpos-bw-product-img-wrap{max-width: 150px; width: 100%; position: relative;}
 .wpos-bw-product-img{height: 150px; width: 100%; object-fit: cover; position: relative; z-index: 2; padding: 5px; border-radius: 15px;}
 .wpos-bw-product-desc-wrap{margin-top: 15px;}
 .wpos-bw-product-desc{text-decoration: underline; display: inline-block; font-size: 14px; cursor: pointer; font-family: "Montserrat", sans-serif;}
