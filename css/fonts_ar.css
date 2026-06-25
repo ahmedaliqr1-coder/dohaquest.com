@@ -1,0 +1,28 @@
+@font-face {
+    font-family: 'Almarai-Bold';
+    src: url('../fonts/almarai-bold-webfont.woff2') format('woff2'),
+         url('../fonts/almarai-bold-webfont.woff') format('woff'),
+         url('../fonts/almarai-bold-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Almarai-Regular';
+    src: url('../fonts/almarai-regular-webfont.woff2') format('woff2'),
+         url('../fonts/almarai-regular-webfont.woff') format('woff'),
+         url('../fonts/almarai-regular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('../fonts/fontawesome-webfont.eot') format('embedded-opentype');
+    src: url('../fonts/fontawesome-webfont.svg') format('svg');
+    src: url('../fonts/fontawesome-webfont.ttf') format('truetype');
+    src: url('../fonts/fontawesome-webfont.woff') format('woff');
+    src: url('../fonts/fontawesome-webfont.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
