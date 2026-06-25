@@ -819,6 +819,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<script>
+// استبدال أيقونات wikipedia بـ SVG مدمج
+function fixPaymentIcons() {
+    document.querySelectorAll('img[alt="Mastercard"]').forEach(function(img) {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 38 24');
+        svg.setAttribute('width', '38');
+        svg.setAttribute('height', '24');
+        svg.setAttribute('style', 'height:20px;width:auto;');
+        svg.innerHTML = '<rect width="38" height="24" rx="4" fill="#252525"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 6.8a7 7 0 0 1 0 10.4A7 7 0 0 1 19 6.8z" fill="#FF5F00"/>';
+        img.parentNode.replaceChild(svg, img);
+    });
+    document.querySelectorAll('img[alt="Visa"]').forEach(function(img) {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 60 24');
+        svg.setAttribute('width', '60');
+        svg.setAttribute('height', '24');
+        svg.setAttribute('style', 'height:20px;width:auto;');
+        svg.innerHTML = '<rect width="60" height="24" rx="4" fill="#1A1F71"/><text x="30" y="17" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle" letter-spacing="2">VISA</text>';
+        img.parentNode.replaceChild(svg, img);
+    });
+}
+// تشغيل فوراً وبعد تحميل الصفحة
+document.addEventListener('DOMContentLoaded', fixPaymentIcons);
+setTimeout(fixPaymentIcons, 500);
+setTimeout(fixPaymentIcons, 1500);
+setTimeout(fixPaymentIcons, 3000);
+</script>
 </body>
 </html>
 
