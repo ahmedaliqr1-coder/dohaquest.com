@@ -1,6 +1,6 @@
 /**
  * Doha Quest - Local Tickets Data & Cart System
- * Intercepts WPOS booking AJAX calls and provides full cart/checkout flow
+ * Matches original bookings.dohaquest.com design exactly
  */
 (function($) {
     "use strict";
@@ -8,106 +8,71 @@
     // ===== بيانات التذاكر الحالية =====
     var LOCAL_TICKETS = [
         {
-            id: 101,
-            name: "General Admission – Adult",
+            id: 131,
+            name: "Online Admission – Adult",
             description: "For guests aged 13 years and above. Includes access to all rides and attractions.",
             price: 235,
             currency: "QAR",
             min_qty: 1,
             max_qty: 10,
             age_info: "Ages 13+",
-            badge: ""
+            badge: "",
+            img: "/bookings/wp-content/uploads/2025/12/cat-1.png"
         },
         {
-            id: 102,
-            name: "General Admission – Junior",
+            id: 130,
+            name: "Online Admission – Junior",
             description: "For guests aged 4 to 12 years. Includes access to all suitable rides and attractions.",
             price: 160,
             currency: "QAR",
             min_qty: 1,
             max_qty: 10,
             age_info: "Ages 4–12",
-            badge: ""
+            badge: "",
+            img: "/bookings/wp-content/uploads/2025/12/cat-1.png"
         },
         {
-            id: 103,
-            name: "General Admission – Child (Under 4)",
-            description: "Children under 4 years old enter free of charge when accompanied by a paying adult.",
-            price: 0,
+            id: 1361,
+            name: "iFLY Quest – Non-Quest Ticket Holder",
+            description: "Experience iFLY indoor skydiving at Doha Quest. Available for non-Quest ticket holders.",
+            price: 200,
             currency: "QAR",
-            min_qty: 0,
-            max_qty: 10,
-            age_info: "Under 4 years",
-            badge: "FREE"
-        },
-        {
-            id: 104,
-            name: "Time Portal – Fast Track Add-on",
-            description: "Skip the queues on specific rides! Add this fast-track ticket to your booking for an enhanced experience.",
-            price: 100,
-            currency: "QAR",
-            min_qty: 0,
+            min_qty: 1,
             max_qty: 10,
             age_info: "All ages",
-            badge: "ADD-ON"
+            badge: "",
+            img: "/bookings/wp-content/uploads/2025/12/cat-1.png"
         }
     ];
 
-    // ===== إنشاء HTML لبطاقة تذكرة =====
+    // ===== إنشاء HTML لبطاقة تذكرة - بنفس تصميم الموقع الأصلي =====
     function buildTicketHTML(ticket) {
-        var priceDisplay = ticket.price === 0
-            ? '<span class="wpos-bw-price" data-price="0">FREE</span>'
-            : '<span class="wpos-bw-price" data-price="' + ticket.price + '">' + ticket.price + '.00</span>';
+        var priceStr = ticket.price.toFixed(2);
 
-        var badgeHTML = ticket.badge
-            ? '<span class="wpos-bw-ticket-badge" style="background:#f67c10;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;margin-left:8px;">' + ticket.badge + '</span>'
-            : '';
-
-        var qtySection = ticket.price > 0
-            ? '<div class="wpos-bw-product-qty" style="margin-bottom:12px;">' +
-                '<div class="quantity">' +
-                    '<button type="button" class="wpos-bw-qty-btn wpos-bw-minus-qty-js">−</button>' +
-                    '<input type="number" class="qty" value="' + ticket.min_qty + '" min="' + ticket.min_qty + '" max="' + ticket.max_qty + '">' +
-                    '<button type="button" class="wpos-bw-qty-btn wpos-bw-plus-qty-js wpos-bw-plus-qty">+</button>' +
-                '</div>' +
-              '</div>'
-            : '';
-
-        var addToCartBtn = ticket.price === 0
-            ? '<button type="button" class="button wpos-wc-add-to-cart-btn" data-product-id="' + ticket.id + '" data-quantity="0" style="opacity:0.6;cursor:default;background:#aaa;border-color:#aaa;">Free Entry – No Booking Required</button>'
-            : '<button type="button" class="button wpos-wc-add-to-cart-btn" data-product-id="' + ticket.id + '" data-quantity="' + ticket.min_qty + '">Add to Cart</button>';
-
-        return '<div class="wpos-bw-product-list" data-product-id="' + ticket.id + '">' +
-            '<div class="wpos-bw-product-list-inr">' +
-                '<div class="wpos-bw-product-img-wrap">' +
-                    '<img src="/bookings/wp-content/uploads/2025/12/cat-1.png" alt="' + ticket.name + '" style="width:100%;border-radius:8px;">' +
-                '</div>' +
-                '<div class="wpos-bw-product-cnt-wrap" style="flex:1;">' +
-                    '<div class="wpos-bw-product-ttl" style="font-weight:bold;font-size:16px;margin-bottom:6px;">' +
-                        ticket.name + badgeHTML +
-                    '</div>' +
-                    '<div style="color:#666;font-size:13px;margin-bottom:8px;">' + ticket.age_info + '</div>' +
-                    '<div style="color:#555;font-size:13px;margin-bottom:12px;">' + ticket.description + '</div>' +
-                    '<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">' +
-                        '<span style="font-size:13px;color:#888;">Price per ticket:</span>' +
-                        '<strong style="font-size:18px;color:#5b2d8e;">' + priceDisplay + ' QAR</strong>' +
-                    '</div>' +
-                    (ticket.price > 0 ? '<div style="font-size:13px;color:#555;margin-bottom:12px;">Total: <strong class="wpos-bw-total-price">' + ticket.price + '.00</strong> QAR</div>' : '') +
-                    qtySection +
-                    '<div class="wpos-bw-product-add-to-cart">' + addToCartBtn + '</div>' +
-                    '<div class="wpos-bw-qty-err" style="display:none;color:red;font-size:12px;">Minimum quantity reached.</div>' +
-                '</div>' +
+        return '<div class="wpos-bw-product-list" data-product-id="' + ticket.id + '" style="display:flex;align-items:center;padding:15px 0;border-bottom:1px solid #eee;gap:15px;">' +
+            '<div style="flex-shrink:0;width:80px;height:80px;overflow:hidden;border-radius:4px;">' +
+                '<img src="' + ticket.img + '" alt="' + ticket.name + '" style="width:80px;height:80px;object-fit:cover;">' +
             '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+                '<h3 style="margin:0 0 4px;font-size:15px;font-weight:700;color:#222;">' + ticket.name + '</h3>' +
+                '<div style="color:#5b2d8e;font-weight:600;font-size:14px;margin-bottom:6px;">QAR ' + priceStr + ' / Ticket</div>' +
+                '<a href="#" class="wpos-show-details" style="color:#5b2d8e;font-size:13px;text-decoration:underline;">Show Details</a>' +
+            '</div>' +
+            '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' +
+                '<div style="display:flex;align-items:center;border:1px solid #ddd;border-radius:4px;overflow:hidden;">' +
+                    '<button type="button" class="wpos-bw-minus-qty-js" style="width:32px;height:36px;background:#f5f5f5;border:none;cursor:pointer;font-size:16px;color:#333;display:flex;align-items:center;justify-content:center;">−</button>' +
+                    '<input type="text" class="qty" value="' + ticket.min_qty + '" min="' + ticket.min_qty + '" max="' + ticket.max_qty + '" style="width:40px;height:36px;border:none;border-left:1px solid #ddd;border-right:1px solid #ddd;text-align:center;font-size:14px;font-weight:600;">' +
+                    '<button type="button" class="wpos-bw-plus-qty-js" style="width:32px;height:36px;background:#f5f5f5;border:none;cursor:pointer;font-size:16px;color:#333;display:flex;align-items:center;justify-content:center;">+</button>' +
+                '</div>' +
+                '<button type="button" class="button wpos-wc-add-to-cart-btn" data-product-id="' + ticket.id + '" data-quantity="' + ticket.min_qty + '" style="background:#5b2d8e;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;">Add to Cart</button>' +
+            '</div>' +
+            '<div style="flex-shrink:0;min-width:80px;text-align:right;font-weight:700;color:#222;font-size:14px;" class="wpos-bw-total-wrap">QAR <span class="wpos-bw-total-price">' + priceStr + '</span></div>' +
         '</div>';
     }
 
     // ===== إنشاء HTML لكل التذاكر =====
     function buildAllTicketsHTML(selectedDate) {
-        var html = '<div class="wpos-bw-eg-plus-wrap-inner">';
-        html += '<div style="background:#f8f4ff;border-left:4px solid #5b2d8e;padding:12px 16px;margin-bottom:20px;border-radius:4px;">';
-        html += '<strong style="color:#5b2d8e;">Visit Date:</strong> <span style="color:#333;">' + selectedDate + '</span>';
-        html += '<br><small style="color:#888;margin-top:4px;display:block;">Tickets will be sent by email. All purchases are non-refundable.</small>';
-        html += '</div>';
+        var html = '<div class="wpos-bw-eg-plus-wrap-inner" style="padding:0;">';
         for (var i = 0; i < LOCAL_TICKETS.length; i++) {
             html += buildTicketHTML(LOCAL_TICKETS[i]);
         }
@@ -162,6 +127,40 @@
         return originalPost.apply(this, arguments);
     };
 
+    // ===== أزرار +/- =====
+    $(document).on('click', '.wpos-bw-plus-qty-js', function() {
+        var input = $(this).siblings('.qty');
+        var max = parseInt(input.attr('max') || 10);
+        var val = parseInt(input.val() || 0);
+        if (val < max) {
+            input.val(val + 1);
+            updateTotal($(this).closest('.wpos-bw-product-list'));
+        }
+    });
+
+    $(document).on('click', '.wpos-bw-minus-qty-js', function() {
+        var input = $(this).siblings('.qty');
+        var min = parseInt(input.attr('min') || 1);
+        var val = parseInt(input.val() || 1);
+        if (val > min) {
+            input.val(val - 1);
+            updateTotal($(this).closest('.wpos-bw-product-list'));
+        }
+    });
+
+    function updateTotal(productEl) {
+        var productId = parseInt(productEl.attr('data-product-id'));
+        var qty = parseInt(productEl.find('.qty').val() || 1);
+        var ticket = null;
+        for (var i = 0; i < LOCAL_TICKETS.length; i++) {
+            if (LOCAL_TICKETS[i].id === productId) { ticket = LOCAL_TICKETS[i]; break; }
+        }
+        if (ticket) {
+            productEl.find('.wpos-bw-total-price').text((ticket.price * qty).toFixed(2));
+            productEl.find('.wpos-wc-add-to-cart-btn').attr('data-quantity', qty);
+        }
+    }
+
     // ===== سلة التسوق المحلية =====
     function getCart() {
         try { return JSON.parse(localStorage.getItem('dq_cart') || '[]'); } catch(e) { return []; }
@@ -173,13 +172,7 @@
     function updateCartBadge() {
         var cart = getCart();
         var total = cart.reduce(function(sum, item) { return sum + item.qty; }, 0);
-        $('.wpos-wc-bw-cart-count, .cart-count, .count').text(total > 0 ? total : '0');
-        // تحديث رابط السلة في الـ header
-        $('a[href*="/bookings/cart/"]').each(function() {
-            var link = $(this);
-            var countEl = link.find('.count');
-            if (countEl.length) countEl.text(total);
-        });
+        $('a[href*="cart"] .count, .cart-contents-count, .wpos-wc-bw-cart-count').text(total > 0 ? total : '0');
     }
 
     // ===== زر Add to Cart =====
@@ -195,7 +188,7 @@
         for (var i = 0; i < LOCAL_TICKETS.length; i++) {
             if (LOCAL_TICKETS[i].id === productId) { ticket = LOCAL_TICKETS[i]; break; }
         }
-        if (!ticket || ticket.price === 0 || qty < 1) return;
+        if (!ticket || qty < 1) return;
 
         // إضافة للسلة
         var cart = getCart();
@@ -221,26 +214,10 @@
         // تأكيد بصري ثم التوجيه لصفحة Cart
         btn.text('✓ Added!').css({'background-color':'#28a745','border-color':'#28a745'}).prop('disabled', true);
 
-        // التوجيه لصفحة Cart بعد ثانية واحدة
         setTimeout(function() {
             window.location.href = '/bookings/cart/';
         }, 800);
     });
-
-    function showAddedPopup(name, qty, price) {
-        var popup = $('<div id="dq-added-popup" style="position:fixed;top:80px;right:20px;background:#5b2d8e;color:#fff;padding:16px 20px;border-radius:8px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:300px;font-family:Montserrat,sans-serif;">' +
-            '<strong style="display:block;margin-bottom:6px;">✓ Added to Cart!</strong>' +
-            '<span style="font-size:13px;">' + qty + 'x ' + name + '</span><br>' +
-            '<span style="font-size:12px;opacity:0.8;">QAR ' + (price * qty).toFixed(2) + '</span>' +
-            '<div style="margin-top:12px;display:flex;gap:8px;">' +
-                '<a href="/bookings/tickets/" style="flex:1;text-align:center;padding:6px;background:rgba(255,255,255,0.2);color:#fff;border-radius:4px;font-size:12px;text-decoration:none;">Continue</a>' +
-                '<a href="/bookings/cart/" style="flex:1;text-align:center;padding:6px;background:#f67c10;color:#fff;border-radius:4px;font-size:12px;text-decoration:none;font-weight:bold;">View Cart →</a>' +
-            '</div>' +
-        '</div>');
-        $('#dq-added-popup').remove();
-        $('body').append(popup);
-        setTimeout(function() { popup.fadeOut(400, function() { popup.remove(); }); }, 4000);
-    }
 
     // تحديث عداد السلة عند تحميل الصفحة
     $(document).ready(function() {
