@@ -323,16 +323,14 @@ function wpos_wc_bw_calendar( selected_date ) {
 			var this_ele		= jQuery('#'+datepicker_id);
 			var cls_ele			= this_ele.closest('.wpos-wc-bw-product-ccat');
 			var event_type_id	= cls_ele.find('.wpos-wc-bw-acc-heading-js').attr('data-event-type-id');
-			var holiday_dates	= jQuery('#'+datepicker_id).data('holiday-dates');
-				holiday_dates	= wpos_wc_bw_obj_to_arr( holiday_dates );
-			var eg_dates		= jQuery('#'+datepicker_id).data('eg-dates');
-				eg_dates		= wpos_wc_bw_obj_to_arr( eg_dates );
-			var dates_arr		= jQuery.merge( jQuery.merge( [], holiday_dates ), eg_dates );
+				var holiday_dates	= [];
+				var eg_dates		= [];
+				var dates_arr		= [];
 
-			jQuery('#'+datepicker_id).datepicker({
-				minDate			: 0,
-				dateFormat		: "yy-mm-dd",
-				maxDate			: WposWcBwPublic.allow_days+'d',
+				jQuery('#'+datepicker_id).datepicker({
+					minDate			: 0,
+					dateFormat		: "yy-mm-dd",
+					maxDate			: '+730d',
 				isRTL			: ( WposWcBwPublic.is_rtl == 1 ) ? true : false,
 				prevText		: WposWcBwPublic.cal_prev_text,
 				nextText		: WposWcBwPublic.cal_next_text,
@@ -363,14 +361,15 @@ function wpos_wc_bw_calendar( selected_date ) {
 
 										jQuery.post(WposWcBwPublic.ajax_url, month_date_data, function(response) {
 
-											if( response.success == 1 ) {
+								if( response.success == 1 ) {
 
-												eg_dates = wpos_wc_bw_obj_to_arr( response.dates );
-												dates_arr = jQuery.merge( jQuery.merge( [], holiday_dates ), eg_dates );
+									// تجاهل التواريخ المغلقة من السيرفر - كل التواريخ مفتوحة
+									eg_dates = [];
+									dates_arr = [];
 
-												/* Refresh datepicker */
-												jQuery('#'+datepicker_id).datepicker( "refresh" );
-											}
+									/* Refresh datepicker */
+									jQuery('#'+datepicker_id).datepicker( "refresh" );
+								}
 
 											jQuery('.wpos-wc-bw-overlay-wrap').hide();
 										});

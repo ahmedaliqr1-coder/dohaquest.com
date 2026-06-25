@@ -847,32 +847,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // إضافة حقول بطاقة الائتمان إذا لم تكن موجودة
-    var paymentDiv = document.querySelector('#payment');
-    if (paymentDiv) {
-        var cardFields = document.querySelector('#dq-card-fields');
-        if (!cardFields) {
-            var cardHtml = '<div id="dq-card-fields" style="padding:15px 0;">' +
-                '<p class="form-row form-row-wide">' +
-                '<label>Card Number <abbr class="required" title="required">*</abbr></label>' +
-                '<input type="text" id="dq_card_number" placeholder="1234 5678 9012 3456" maxlength="19" style="width:100%;padding:8px;border:1px solid #ccc;border-radius:4px;">' +
-                '</p>' +
-                '<p class="form-row form-row-first">' +
-                '<label>Expiry Date <abbr class="required" title="required">*</abbr></label>' +
-                '<input type="text" id="dq_card_expiry" placeholder="MM/YY" maxlength="5" style="width:100%;padding:8px;border:1px solid #ccc;border-radius:4px;">' +
-                '</p>' +
-                '<p class="form-row form-row-last">' +
-                '<label>CVV <abbr class="required" title="required">*</abbr></label>' +
-                '<input type="text" id="dq_card_cvv" placeholder="123" maxlength="4" style="width:100%;padding:8px;border:1px solid #ccc;border-radius:4px;">' +
-                '</p>' +
-                '</div>';
-            
-            var placeOrderBtn = paymentDiv.querySelector('#place_order');
-            if (placeOrderBtn) {
-                placeOrderBtn.insertAdjacentHTML('beforebegin', cardHtml);
-            }
-        }
-    }
+    // خانات بطاقة الائتمان موجودة بالفعل في الـ HTML - لا داعي لإضافتها مرة أخرى
     
     // تنسيق رقم البطاقة
     var cardNum = document.getElementById('dq_card_number');
