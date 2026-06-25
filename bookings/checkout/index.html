@@ -369,7 +369,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		<div class="hero-section-overlay"></div>
 		<div class="hero-container site-container">
 			<header class="entry-header page-title title-align-center title-tablet-align-inherit title-mobile-align-inherit">
-				<h1 class="entry-title">Cart</h1>			</header><!-- .entry-header -->
+				<h1 class="entry-title">Checkout</h1>			</header><!-- .entry-header -->
 		</div>
 	</div>
 </section><!-- .entry-hero -->
@@ -381,6 +381,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<div class="entry-content-wrap">
 		
 <div class="entry-content single-content">
+	<style type="text/css">.wpos-wcb-datepicker td.wpos-wc-bw-h-close span{background-color: #f67c10; color: #ffffff;}.wpos-wcb-datepicker td.wpos-wc-bw-eg-close span{background-color: #c42a2a; color: #ffffff;}.wpos-wcb-booking-status-closed .wpos-wcb-booking-status-mark{background-color: #c42a2a;}.wpos-wcb-booking-status-holiday .wpos-wcb-booking-status-mark{background-color: #f67c10;}</style>
+	<div class="wpos-wc-bw-step-timer-wrp">
+		<div class="wpos-wc-bw-bkn-wrap">
+				<ul><li class="wpos-wc-bw-bkn  wpos-wc-bw-bkn-link">
+					<a href="/bookings/"><i class="fa-solid fa-bars wpos-wc-bw-icon-left"></i> <span>Category</span></a> <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+				</li><li class="wpos-wc-bw-bkn  wpos-wc-bw-bkn-link">
+					<a href="/bookings/?cid=20"><i class="fa-solid fa-ticket wpos-wc-bw-icon-left"></i> <span>Tickets</span></a> <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+				</li><li class="wpos-wc-bw-bkn  wpos-wc-bw-bkn-link">
+					<a href="/bookings/cart/"><i class="fa-solid fa-cart-plus wpos-wc-bw-icon-left"></i> <span>Cart</span></a> <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+				</li><li class="wpos-wc-bw-bkn active">
+					<a href="javascript:void(0);"><i class="fa-solid fa-credit-card wpos-wc-bw-icon-left"></i> <span>Checkout</span></a> <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+				</li><li class="wpos-wc-bw-bkn ">
+					<a href="javascript:void(0);"><i class="fa-solid fa-lock wpos-wc-bw-icon-left"></i> <span>Confirmation</span></a> <i class="fa fa-chevron-right wpos-wc-bw-icon-right"></i>
+				</li></ul>
+			</div>
+		<div class="wpos-wc-bw-egalaxy-timer">
+			<div class="wpos-wc-bw-smpl-timer-wrap wpos-wc-bw-timer-wrap wpos-wc-bw-clearfix wpos-bw-box-sizing wpos-wc-bw-smpl-timer-design-1">
+				<div class="wpos-wc-bw-timer wpos-wc-bw-timer-inr wpos-wc-bw-timer-js" id="wpos-wc-bw-smpl-timer-checkout">
+					<div class="wpos-wc-timerwrp">
+						<p class="time-icon"><img decoding="async" src="/bookings/wp-content/plugins/wpos-booking-and-wallet/assets/images/time-remaining.png" alt="" /></p>
+						<span>Time remaining for this session:</span>
+					</div>
+					<div class="wpos-wc-bw-timer-design">
+						<div class="wpos-wc-bw-clock-simple wpos-wc-bw-clearfix wpos-wc-bw-timer-initialized">
+							<div class="wpos-wc-bw-smpl-col wpos-wc-bw-minutes-wrap">
+								<div class="ce-minutes wpos-wc-bw-smpl-digits"><span class="ce-minutes-digit" id="dq-checkout-timer-min-1">1</span><span class="ce-minutes-digit" id="dq-checkout-timer-min-2">5</span></div>
+								<span class="ce-minutes-label wpos-wc-bw-smpl-lbl"></span>
+							</div>
+							<div class="wpos-wc-bw-smpl-col wpos-wc-bw-seconds-wrap">
+								<div class="ce-seconds wpos-wc-bw-smpl-digits"><span class="ce-seconds-digit" id="dq-checkout-timer-sec-1">0</span><span class="ce-seconds-digit" id="dq-checkout-timer-sec-2">0</span></div>
+								<span class="ce-seconds-label wpos-wc-bw-smpl-lbl"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Session Time Out Popup -->
+			<div class="wpos-wc-bw-popup-overlay wpos-wc-bw-spopup-overlay-js"></div>
+			<div class="wpos-wc-bw-popup-data-wrp wpos-wc-session-popup wpos-bw-hide">
+				<div class="wpos-wc-bw-popup-data-cnt">
+					<div class="wpos-wc-bw-popup-cnt-block">
+						<div class="wpos-wc-bw-popup-body-wrp">
+							<div class="wpos-wc-bw-popup-title">Session Warning</div>
+							<div class="wpos-wc-bw-popup-body">
+								<p>Your session has expired.</p>
+								<div class="wpos-wc-bw-popup-btn-wrap">
+									<div class="wpos-wc-bw-popup-btn wpos-wc-bw-popup-session-btn" href="/bookings/">Start Over</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="woocommerce-form-login-toggle">
+	<div class="woocommerce-info" role="status">
+		Returning customer? <a href="#" class="showlogin">Click here to login</a>	</div>
+	</div>
+	<div class="woocommerce-form-coupon-toggle">
+	<div class="woocommerce-info" role="status">
+		Have a coupon? <a href="#" class="showcoupon">Click here to enter your code</a>	</div>
+	</div>
 	<div class="woocommerce">
 <div class="woocommerce-notices-wrapper"></div>
 <form name="checkout" method="post" class="checkout woocommerce-checkout" id="dq-checkout-form" novalidate="novalidate">
@@ -445,52 +508,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <tbody id="dq-order-items">
 <tr class="cart_item">
 <td class="product-name"><span id="dq-order-summary">Loading...</span></td>
-<td class="product-total"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;<span id="dq-subtotal">0.00</span></bdi></span></td>
+<td class="product-total"><span class="woocommerce-Price-amount amount"><bdi><span id="dq-subtotal">0.00</span>&nbsp;<span class="woocommerce-Price-currencySymbol">QAR</span></bdi></span></td>
 </tr>
 </tbody>
 <tfoot>
+<tr class="cart-subtotal">
+<th>Subtotal</th>
+<td><span class="woocommerce-Price-amount amount"><bdi><span id="dq-subtotal-footer">0.00</span>&nbsp;<span class="woocommerce-Price-currencySymbol">QAR</span></bdi></span></td>
+</tr>
 <tr class="order-total">
 <th>Total</th>
-<td><strong><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;<span id="dq-total">0.00</span></bdi></span></strong></td>
+<td><strong><span class="woocommerce-Price-amount amount"><bdi><span id="dq-total">0.00</span>&nbsp;<span class="woocommerce-Price-currencySymbol">QAR</span></bdi></span></strong></td>
 </tr>
 </tfoot>
 </table>
 
-<div id="payment" class="woocommerce-checkout-payment">
+<h3 id="order_review_heading">Payments</h3><div id="payment" class="woocommerce-checkout-payment">
 <ul class="wc_payment_methods payment_methods methods">
-<li class="wc_payment_method payment_method_credit_card">
-<input id="payment_method_credit_card" type="radio" class="input-radio" name="payment_method" value="credit_card" checked="checked">
-<label for="payment_method_credit_card" style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;">
-Credit / Debit Card
-<span style="margin-left:auto;display:flex;gap:6px;align-items:center;">
-<svg viewBox="0 0 38 24" width="38" height="24" style="height:20px;width:auto;"><rect width="38" height="24" rx="4" fill="#252525"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 6.8a7 7 0 0 1 0 10.4A7 7 0 0 1 19 6.8z" fill="#FF5F00"/></svg>
-<svg viewBox="0 0 60 24" width="60" height="24" style="height:20px;width:auto;"><rect width="60" height="24" rx="4" fill="#1A1F71"/><text x="30" y="17" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle" letter-spacing="2">VISA</text></svg>
-</span>
-</label>
-<div class="payment_box payment_method_credit_card" style="padding:15px 0;">
-<p class="form-row form-row-wide">
-<label>Card Number <abbr class="required" title="required">*</abbr></label>
-<input type="text" id="dq_card_number" name="dq_card_number" placeholder="1234 5678 9012 3456" maxlength="19" class="input-text" style="width:100%;">
-</p>
-<p class="form-row form-row-first">
-<label>Expiry Date <abbr class="required" title="required">*</abbr></label>
-<input type="text" id="dq_card_expiry" name="dq_card_expiry" placeholder="MM/YY" maxlength="5" class="input-text" style="width:100%;">
-</p>
-<p class="form-row form-row-last">
-<label>CVV <abbr class="required" title="required">*</abbr></label>
-<input type="text" id="dq_card_cvv" name="dq_card_cvv" placeholder="123" maxlength="4" class="input-text" style="width:100%;">
-</p>
-</div>
+<li class="wc_payment_method payment_method_skipcash">
+<input id="payment_method_skipcash" type="radio" class="input-radio" name="payment_method" value="skipcash" checked="checked" data-order_button_text="Proceed to Payment" style="display: none;">
+<label for="payment_method_skipcash">
+	Credit / Debit Cards </label>
+		<div class="payment_box payment_method_skipcash">
+		<p>SkipCash is a payment app that offers a convenient and enjoyable experience throughout the payments journey for both consumers and merchants.</p>
+	</div>
 </li>
 </ul>
 <div class="form-row place-order">
-<p class="form-row validate-required">
-<label class="woocommerce-form__label checkbox">
-<input type="checkbox" class="woocommerce-form__input input-checkbox" name="terms" id="terms">
-<span>I have read and agree to the website <a href="/en/terms" target="_blank">terms and conditions</a></span>&nbsp;<abbr class="required" title="required">*</abbr>
+<div class="woocommerce-terms-and-conditions-wrapper">
+<div class="woocommerce-privacy-policy-text"><p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="https://bookings.dohaquest.com/privacy-policy/" class="woocommerce-privacy-policy-link" target="_blank">privacy policy</a>.</p></div>
+<p class="form-row validate-required" id="terms_and_conditions_field">
+<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
+	<input type="checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" name="terms" id="terms" checked="checked">
+	<span class="woocommerce-terms-and-conditions-checkbox-text">I have read and agree to the website <a href="https://bookings.dohaquest.com/terms-and-conditions/" class="woocommerce-terms-and-conditions-link" target="_blank">terms and conditions</a></span>&nbsp;<span class="required" aria-required="true">*</span>
 </label>
 </p>
-<button type="submit" class="button alt wp-element-button" id="place_order" value="Place order">Place order</button>
+</div>
+<button type="submit" class="button alt wp-element-button" id="place_order" value="Proceed to Payment">Proceed to Payment</button>
 </div>
 </div>
 </div>
@@ -808,6 +862,49 @@ const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(
 		
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // ===== Timer =====
+    var timerKey = 'dq_session_start';
+    var sessionDuration = 15 * 60;
+    var sessionStart = parseInt(localStorage.getItem(timerKey) || '0');
+    if (!sessionStart) {
+        sessionStart = Math.floor(Date.now() / 1000);
+        localStorage.setItem(timerKey, sessionStart);
+    }
+    function updateCheckoutTimer() {
+        var now = Math.floor(Date.now() / 1000);
+        var elapsed = now - sessionStart;
+        var remaining = sessionDuration - elapsed;
+        if (remaining < 0) remaining = 0;
+        var mins = Math.floor(remaining / 60);
+        var secs = remaining % 60;
+        var m1 = document.getElementById('dq-checkout-timer-min-1');
+        var m2 = document.getElementById('dq-checkout-timer-min-2');
+        var s1 = document.getElementById('dq-checkout-timer-sec-1');
+        var s2 = document.getElementById('dq-checkout-timer-sec-2');
+        if (m1) m1.textContent = Math.floor(mins / 10);
+        if (m2) m2.textContent = mins % 10;
+        if (s1) s1.textContent = Math.floor(secs / 10);
+        if (s2) s2.textContent = secs % 10;
+        if (remaining <= 0) {
+            clearInterval(checkoutTimerInterval);
+            var overlay = document.querySelector('.wpos-wc-bw-spopup-overlay-js');
+            var popup = document.querySelector('.wpos-wc-session-popup');
+            if (overlay) overlay.style.display = 'block';
+            if (popup) { popup.classList.remove('wpos-bw-hide'); popup.style.display = 'block'; }
+        }
+    }
+    updateCheckoutTimer();
+    var checkoutTimerInterval = setInterval(updateCheckoutTimer, 1000);
+    document.querySelectorAll('.wpos-wc-bw-popup-session-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            localStorage.removeItem(timerKey);
+            localStorage.removeItem('dq_cart');
+            localStorage.removeItem('dq_visit_date');
+            window.location.href = '/bookings/';
+        });
+    });
+
+    // ===== Cart Data =====
     var rawCartCO = localStorage.getItem('dq_cart');
     var cartDataCO;
     try { cartDataCO = JSON.parse(rawCartCO || '[]'); } catch(e) { cartDataCO = []; }
@@ -819,79 +916,58 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     var date = localStorage.getItem('dq_visit_date') || '';
     
-    // عرض الطلب في جانب Order Review
-    var orderTable = document.querySelector('.woocommerce-checkout-review-order-table');
-    if (orderTable && items.length > 0) {
+    // عرض الطلب في جانب Order Review - مطابق للأصلي
+    var orderTbody = document.getElementById('dq-order-items');
+    if (orderTbody && items.length > 0) {
         var total = 0;
         var rows = '';
         items.forEach(function(item) {
             var sub = item.price * item.qty;
             total += sub;
-            rows += '<tr class="cart_item"><td class="product-name">' + item.name + 
-                (date ? '<br><small>Date: ' + date + '</small>' : '') +
-                '&nbsp;<strong class="product-quantity">×&nbsp;' + item.qty + '</strong></td>' +
-                '<td class="product-total"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;' + sub.toFixed(2) + '</bdi></span></td></tr>';
+            var bookingDate = date ? date + ' 14:00 - 22:00' : '';
+            var category = item.category || 'Admission Tickets';
+            rows += '<tr class="cart_item wpos-bw-product-list">' +
+                '<td class="product-name">' +
+                    '<span class="product-title">' + item.name + '</span>&nbsp;' +
+                    '<strong class="product-quantity">&times;&nbsp;' + item.qty + '</strong>' +
+                    '<dl class="variation">' +
+                        (bookingDate ? '<dt class="variation-BookingDate">Booking Date:</dt><dd class="variation-BookingDate"><p>' + bookingDate + '</p></dd>' : '') +
+                        '<dt class="variation-Category">Category:</dt><dd class="variation-Category"><p>' + category + '</p></dd>' +
+                    '</dl>' +
+                '</td>' +
+                '<td class="product-total">' +
+                    '<span class="woocommerce-Price-amount amount"><bdi>' + sub.toFixed(2) + '&nbsp;<span class="woocommerce-Price-currencySymbol">QAR</span></bdi></span>' +
+                '</td>' +
+            '</tr>';
         });
-        
-        var tbody = orderTable.querySelector('tbody');
-        if (tbody) tbody.innerHTML = rows;
+        orderTbody.innerHTML = rows;
         
         // تحديث الإجمالي
-        var totalEls = orderTable.querySelectorAll('.order-total .woocommerce-Price-amount bdi');
-        totalEls.forEach(function(el) {
-            el.innerHTML = '<span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;' + total.toFixed(2);
-        });
-        var subtotalEls = orderTable.querySelectorAll('.cart-subtotal .woocommerce-Price-amount bdi');
-        subtotalEls.forEach(function(el) {
-            el.innerHTML = '<span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;' + total.toFixed(2);
-        });
+        var subtotalEl = document.getElementById('dq-subtotal');
+        var subtotalFooterEl = document.getElementById('dq-subtotal-footer');
+        var totalEl = document.getElementById('dq-total');
+        if (subtotalEl) subtotalEl.textContent = total.toFixed(2);
+        if (subtotalFooterEl) subtotalFooterEl.textContent = total.toFixed(2);
+        if (totalEl) totalEl.textContent = total.toFixed(2);
     }
     
-    // خانات بطاقة الائتمان موجودة بالفعل في الـ HTML - لا داعي لإضافتها مرة أخرى
-    
-    // تنسيق رقم البطاقة
-    var cardNum = document.getElementById('dq_card_number');
-    if (cardNum) {
-        cardNum.addEventListener('input', function() {
-            var v = this.value.replace(/\D/g, '').substring(0, 16);
-            this.value = v.replace(/(\d{4})/g, '$1 ').trim();
-        });
-    }
-    
-    // تنسيق تاريخ الانتهاء
-    var cardExp = document.getElementById('dq_card_expiry');
-    if (cardExp) {
-        cardExp.addEventListener('input', function() {
-            var v = this.value.replace(/\D/g, '').substring(0, 4);
-            if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
-            this.value = v;
-        });
-    }
-    
-    // زر Place Order
+    // زر Proceed to Payment
     var placeBtn = document.querySelector('#place_order');
     if (placeBtn) {
         placeBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // التحقق من البيانات الأساسية
             var fname = document.querySelector('#billing_first_name');
             var lname = document.querySelector('#billing_last_name');
             var email = document.querySelector('#billing_email');
             var phone = document.querySelector('#billing_phone');
+            var terms = document.querySelector('#terms');
             
             if (!fname || !fname.value.trim()) { alert('Please enter your first name'); fname && fname.focus(); return; }
             if (!lname || !lname.value.trim()) { alert('Please enter your last name'); lname && lname.focus(); return; }
-            if (!email || !email.value.trim()) { alert('Please enter your email'); email && email.focus(); return; }
-            if (!phone || !phone.value.trim()) { alert('Please enter your phone'); phone && phone.focus(); return; }
-            
-            var cardN = document.getElementById('dq_card_number');
-            var cardE = document.getElementById('dq_card_expiry');
-            var cardC = document.getElementById('dq_card_cvv');
-            
-            if (cardN && cardN.value.replace(/\s/g,'').length < 16) { alert('Please enter a valid card number'); cardN.focus(); return; }
-            if (cardE && cardE.value.length < 5) { alert('Please enter a valid expiry date'); cardE.focus(); return; }
-            if (cardC && cardC.value.length < 3) { alert('Please enter a valid CVV'); cardC.focus(); return; }
+            if (!email || !email.value.trim()) { alert('Please enter your email address'); email && email.focus(); return; }
+            if (!phone || !phone.value.trim()) { alert('Please enter your phone number'); phone && phone.focus(); return; }
+            if (terms && !terms.checked) { alert('Please agree to the terms and conditions'); return; }
             
             // حفظ بيانات الطلب
             var orderData = {
@@ -905,8 +981,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 orderDate: new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})
             };
             localStorage.setItem('dq_order', JSON.stringify(orderData));
-            
-            // الانتقال لصفحة Processing
             window.location.href = '/bookings/processing/';
         });
     }
