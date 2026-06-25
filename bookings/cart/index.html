@@ -281,7 +281,65 @@ body, h1, h2, h3, h4, h5, h6, p, a, button, input {
 /* Hide vendor notice */
 .wposb-header-notice {
     display: none;
-}		</style>
+}
+
+/* Fix Cart buttons - make them equal width and full width */
+.wc-proceed-to-checkout,
+.return-to-shop {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 10px 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+}
+.wc-proceed-to-checkout .checkout-button,
+.return-to-shop .button {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 14px 20px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+    color: #ffffff !important;
+    background-color: #510c76 !important;
+    border: 2px solid #510c76 !important;
+    text-decoration: none !important;
+}
+.wc-proceed-to-checkout .checkout-button:hover,
+.return-to-shop .button:hover {
+    background-color: #6e1798 !important;
+    border-color: #6e1798 !important;
+    color: #ffffff !important;
+}
+
+/* Fix cart table responsive - show data-title labels on mobile */
+@media screen and (max-width: 767px) {
+    .shop_table_responsive tr td::before {
+        content: attr(data-title) " " !important;
+        font-weight: 700 !important;
+        float: left !important;
+    }
+    .shop_table_responsive thead {
+        display: none !important;
+    }
+    .shop_table_responsive tr {
+        display: block !important;
+        border-bottom: 1px solid #e5e5e5 !important;
+        padding: 10px 0 !important;
+    }
+    .shop_table_responsive td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 6px 0 !important;
+        border: none !important;
+    }
+    .product-thumbnail {
+        display: none !important;
+    }
+}	</style>
 		</head>
 
 <body class="wp-singular page-template-default page page-id-77 wp-custom-logo wp-embed-responsive wp-theme-kadence theme-kadence woocommerce-cart woocommerce-page woocommerce-no-js ta-custom-footer-enabled tahefobu-hide-theme-footer footer-on-bottom hide-focus-outline link-style-no-underline content-title-style-above content-width-normal content-style-boxed content-vertical-padding-show non-transparent-header mobile-non-transparent-header kadence-elementor-colors elementor-default elementor-kit-776">

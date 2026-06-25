@@ -156,6 +156,46 @@
             color: #333 !important;
         }
         .dq-tickets-header strong { color: #5b2d8e !important; }
+
+        /* Mobile responsive for ticket cards */
+        @media screen and (max-width: 600px) {
+            .dq-ticket-card {
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 12px !important;
+            }
+            .dq-ticket-img-wrap {
+                width: 80px !important;
+                height: 80px !important;
+                min-width: 80px !important;
+            }
+            .dq-ticket-img-wrap img {
+                width: 80px !important;
+                height: 80px !important;
+                max-width: 80px !important;
+            }
+            .dq-ticket-info {
+                flex: 1 !important;
+                min-width: 150px !important;
+            }
+            .dq-ticket-name {
+                font-size: 14px !important;
+                white-space: normal !important;
+                word-break: break-word !important;
+            }
+            .dq-ticket-actions {
+                width: 100% !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                flex-shrink: unset !important;
+            }
+            .dq-add-to-cart-btn {
+                flex: 1 !important;
+                padding: 10px 12px !important;
+                font-size: 13px !important;
+            }
+        }
     `;
 
     // حقن CSS في الصفحة
