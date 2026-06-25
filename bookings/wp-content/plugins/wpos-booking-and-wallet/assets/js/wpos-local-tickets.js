@@ -218,14 +218,13 @@
         }
         saveCart(cart);
 
-        // تأكيد بصري
-        btn.text('✓ Added to Cart!').css({'background-color':'#28a745','border-color':'#28a745'});
-        setTimeout(function() {
-            btn.text('Add to Cart').css({'background-color':'','border-color':''});
-        }, 2000);
+        // تأكيد بصري ثم التوجيه لصفحة Cart
+        btn.text('✓ Added!').css({'background-color':'#28a745','border-color':'#28a745'}).prop('disabled', true);
 
-        // عرض popup صغير
-        showAddedPopup(ticket.name, qty, ticket.price);
+        // التوجيه لصفحة Cart بعد ثانية واحدة
+        setTimeout(function() {
+            window.location.href = '/bookings/cart/';
+        }, 800);
     });
 
     function showAddedPopup(name, qty, price) {
