@@ -894,6 +894,37 @@ const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(
 			});
 		</script>
 <script src="/bookings/wp-content/plugins/wpos-booking-and-wallet/assets/js/wpos-local-tickets.js?ver=2.0"></script>
+<script>
+// Override ticket card layout after all scripts load
+(function() {
+    function fixTicketLayout() {
+        // Add override style at end of head to beat !important from plugin
+        var style = document.createElement('style');
+        style.id = 'dq-ticket-fix-final';
+        style.textContent = [
+            '.dq-ticket-card { display: block !important; gap: 0 !important; }',
+            '.dq-ticket-img-wrap { width: 100% !important; height: auto !important; flex-shrink: unset !important; margin-bottom: 12px !important; }',
+            '.dq-ticket-img-wrap img { width: 100% !important; height: 180px !important; max-width: 100% !important; }',
+            '.dq-ticket-info { display: block !important; width: 100% !important; flex: unset !important; min-width: unset !important; }',
+            '.wpos-bw-product-list { display: block !important; }',
+            '.wpos-bw-product-list-inr { display: block !important; }',
+            '.wpos-bw-product-img-wrap { width: 100% !important; flex-shrink: unset !important; margin-bottom: 12px !important; }',
+            '.wpos-bw-product-img-wrap img { width: 100% !important; height: 180px !important; max-width: 100% !important; }'
+        ].join('\n');
+        document.head.appendChild(style);
+    }
+    // Run immediately and also after AJAX loads tickets
+    fixTicketLayout();
+    document.addEventListener('DOMContentLoaded', fixTicketLayout);
+    // Watch for ticket cards being added dynamically
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+            if (m.addedNodes.length) { fixTicketLayout(); }
+        });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
 </body>
 </html>
 
