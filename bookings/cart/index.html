@@ -381,9 +381,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<div class="entry-content-wrap">
 		
 <div class="entry-content single-content">
-	<div class="woocommerce"><div class="woocommerce-notices-wrapper"></div><div class="wc-empty-cart-message">
-	<div class="cart-empty woocommerce-info" role="status">
-		Your cart is currently empty.	</div>
+	<div class="woocommerce">
+<div class="woocommerce-notices-wrapper"></div>
+<form class="woocommerce-cart-form" action="" method="post">
+<table class="shop_table shop_table_responsive cart woocommerce-cart-form__contents" cellspacing="0">
+<thead>
+<tr>
+<th class="product-remove">&nbsp;</th>
+<th class="product-thumbnail">&nbsp;</th>
+<th class="product-name">Product</th>
+<th class="product-price">Price</th>
+<th class="product-quantity">Quantity</th>
+<th class="product-subtotal">Subtotal</th>
+</tr>
+</thead>
+<tbody id="dq-cart-items">
+<tr>
+<td colspan="6" style="text-align:center;padding:20px;">Loading cart...</td>
+</tr>
+</tbody>
+</table>
+<div class="cart-collaterals">
+<div class="cart_totals">
+<h2>Cart totals</h2>
+<table class="shop_table shop_table_responsive">
+<tbody>
+<tr class="cart-subtotal">
+<th>Subtotal</th>
+<td data-title="Subtotal"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;<span id="dq-cart-subtotal">0.00</span></bdi></span></td>
+</tr>
+<tr class="order-total">
+<th>Total</th>
+<td data-title="Total"><strong><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;<span id="dq-cart-total">0.00</span></bdi></span></strong></td>
+</tr>
+</tbody>
+</table>
+<div class="wc-proceed-to-checkout">
+<a href="../checkout/" class="checkout-button button alt wc-forward wp-element-button">
+Proceed to checkout</a>
+</div>
+</div>
+</div>
+</form>
 </div>	<p class="return-to-shop">
 		<a class="button wc-backward" href="../index.html">
 			Return to Buy Tickets		</a>

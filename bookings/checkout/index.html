@@ -381,9 +381,120 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<div class="entry-content-wrap">
 		
 <div class="entry-content single-content">
-	<div class="woocommerce"><div class="woocommerce-notices-wrapper"></div><div class="wc-empty-cart-message">
-	<div class="cart-empty woocommerce-info" role="status">
-		Your cart is currently empty.	</div>
+	<div class="woocommerce">
+<div class="woocommerce-notices-wrapper"></div>
+<form name="checkout" method="post" class="checkout woocommerce-checkout" id="dq-checkout-form" novalidate="novalidate">
+<div class="col2-set" id="customer_details">
+<div class="col-1">
+<div class="woocommerce-billing-fields">
+<h3>Billing details</h3>
+<div class="woocommerce-billing-fields__field-wrapper">
+<p class="form-row form-row-first validate-required" id="billing_first_name_field">
+<label for="billing_first_name">First name&nbsp;<abbr class="required" title="required">*</abbr></label>
+<span class="woocommerce-input-wrapper"><input type="text" class="input-text" name="billing_first_name" id="billing_first_name" placeholder="" value="" autocomplete="given-name"></span>
+</p>
+<p class="form-row form-row-last validate-required" id="billing_last_name_field">
+<label for="billing_last_name">Last name&nbsp;<abbr class="required" title="required">*</abbr></label>
+<span class="woocommerce-input-wrapper"><input type="text" class="input-text" name="billing_last_name" id="billing_last_name" placeholder="" value="" autocomplete="family-name"></span>
+</p>
+<p class="form-row form-row-wide validate-required validate-email" id="billing_email_field">
+<label for="billing_email">Email address&nbsp;<abbr class="required" title="required">*</abbr></label>
+<span class="woocommerce-input-wrapper"><input type="email" class="input-text" name="billing_email" id="billing_email" placeholder="" value="" autocomplete="email username"></span>
+</p>
+<p class="form-row form-row-wide validate-required validate-phone" id="billing_phone_field">
+<label for="billing_phone">Phone&nbsp;<abbr class="required" title="required">*</abbr></label>
+<span class="woocommerce-input-wrapper"><input type="tel" class="input-text" name="billing_phone" id="billing_phone" placeholder="" value="" autocomplete="tel"></span>
+</p>
+<p class="form-row form-row-wide validate-required" id="billing_country_field">
+<label for="billing_country">Country / Region&nbsp;<abbr class="required" title="required">*</abbr></label>
+<span class="woocommerce-input-wrapper">
+<select name="billing_country" id="billing_country" class="country_to_state country_select" autocomplete="country">
+<option value="">Select a country / region...</option>
+<option value="QA" selected="selected">Qatar</option>
+<option value="SA">Saudi Arabia</option>
+<option value="AE">United Arab Emirates</option>
+<option value="KW">Kuwait</option>
+<option value="BH">Bahrain</option>
+<option value="OM">Oman</option>
+<option value="EG">Egypt</option>
+<option value="JO">Jordan</option>
+<option value="GB">United Kingdom</option>
+<option value="US">United States</option>
+<option value="FR">France</option>
+<option value="DE">Germany</option>
+<option value="IN">India</option>
+<option value="PK">Pakistan</option>
+<option value="PH">Philippines</option>
+</select>
+</span>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="order_review" class="woocommerce-checkout-review-order">
+<h3 id="order_review_heading">Your order</h3>
+<table class="shop_table woocommerce-checkout-review-order-table">
+<thead>
+<tr>
+<th class="product-name">Product</th>
+<th class="product-total">Subtotal</th>
+</tr>
+</thead>
+<tbody id="dq-order-items">
+<tr class="cart_item">
+<td class="product-name"><span id="dq-order-summary">Loading...</span></td>
+<td class="product-total"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;<span id="dq-subtotal">0.00</span></bdi></span></td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="order-total">
+<th>Total</th>
+<td><strong><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">QAR</span>&nbsp;<span id="dq-total">0.00</span></bdi></span></strong></td>
+</tr>
+</tfoot>
+</table>
+
+<div id="payment" class="woocommerce-checkout-payment">
+<ul class="wc_payment_methods payment_methods methods">
+<li class="wc_payment_method payment_method_credit_card">
+<input id="payment_method_credit_card" type="radio" class="input-radio" name="payment_method" value="credit_card" checked="checked">
+<label for="payment_method_credit_card" style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;">
+Credit / Debit Card
+<span style="margin-left:auto;display:flex;gap:6px;align-items:center;">
+<svg viewBox="0 0 38 24" width="38" height="24" style="height:20px;width:auto;"><rect width="38" height="24" rx="4" fill="#252525"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 6.8a7 7 0 0 1 0 10.4A7 7 0 0 1 19 6.8z" fill="#FF5F00"/></svg>
+<svg viewBox="0 0 60 24" width="60" height="24" style="height:20px;width:auto;"><rect width="60" height="24" rx="4" fill="#1A1F71"/><text x="30" y="17" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle" letter-spacing="2">VISA</text></svg>
+</span>
+</label>
+<div class="payment_box payment_method_credit_card" style="padding:15px 0;">
+<p class="form-row form-row-wide">
+<label>Card Number <abbr class="required" title="required">*</abbr></label>
+<input type="text" id="dq_card_number" name="dq_card_number" placeholder="1234 5678 9012 3456" maxlength="19" class="input-text" style="width:100%;">
+</p>
+<p class="form-row form-row-first">
+<label>Expiry Date <abbr class="required" title="required">*</abbr></label>
+<input type="text" id="dq_card_expiry" name="dq_card_expiry" placeholder="MM/YY" maxlength="5" class="input-text" style="width:100%;">
+</p>
+<p class="form-row form-row-last">
+<label>CVV <abbr class="required" title="required">*</abbr></label>
+<input type="text" id="dq_card_cvv" name="dq_card_cvv" placeholder="123" maxlength="4" class="input-text" style="width:100%;">
+</p>
+</div>
+</li>
+</ul>
+<div class="form-row place-order">
+<p class="form-row validate-required">
+<label class="woocommerce-form__label checkbox">
+<input type="checkbox" class="woocommerce-form__input input-checkbox" name="terms" id="terms">
+<span>I have read and agree to the website <a href="/en/terms" target="_blank">terms and conditions</a></span>&nbsp;<abbr class="required" title="required">*</abbr>
+</label>
+</p>
+<button type="submit" class="button alt wp-element-button" id="place_order" value="Place order">Place order</button>
+</div>
+</div>
+</div>
+</form>
 </div>	<p class="return-to-shop">
 		<a class="button wc-backward" href="../index.html">
 			Return to Buy Tickets		</a>
