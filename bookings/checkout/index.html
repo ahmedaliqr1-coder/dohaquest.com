@@ -67,6 +67,7 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 /* Kadence Footer CSS */
 #colophon{background:var(--global-palette1);}
 /* Kadence Dynamic CSS */
+.content-title-style-above .page-hero-section .entry-hero-container-inner{background-image:url('/bookings/wp-content/uploads/2025/12/itKI76mfGrrkfrHVr7b1tBxLKsy0YjFX2IemQuEz.jpg');background-repeat:no-repeat;background-position:center center;background-size:cover;background-attachment:scroll;}
 .content-title-style-above .page-hero-section .entry-hero-container-inner{background-image:url('/bookings/wp-content/uploads/2025/12/1I1T4qqATFgrmpyijpbyZCOX8b1IiQXbPEIxRbZX.jpg');background-repeat:no-repeat;background-position:center center;background-size:cover;background-attachment:scroll;}
 /* Kadence Woo CSS */
 .entry-hero.product-hero-section .entry-header{min-height:200px;}.product-title .single-category{font-weight:700;font-size:32px;line-height:1.5;color:var(--global-palette3);}.wp-site-blocks .product-hero-section .extra-title{font-weight:700;font-size:32px;line-height:1.5;}.woocommerce ul.products.woo-archive-btn-button .product-action-wrap .button:not(.kb-button), .woocommerce ul.products li.woo-archive-btn-button .button:not(.kb-button), .wc-block-grid__product.woo-archive-btn-button .product-details .wc-block-grid__product-add-to-cart .wp-block-button__link{border:2px none transparent;box-shadow:0px 0px 0px 0px rgba(0,0,0,0.0);}.woocommerce ul.products.woo-archive-btn-button .product-action-wrap .button:not(.kb-button):hover, .woocommerce ul.products li.woo-archive-btn-button .button:not(.kb-button):hover, .wc-block-grid__product.woo-archive-btn-button .product-details .wc-block-grid__product-add-to-cart .wp-block-button__link:hover{box-shadow:0px 0px 0px 0px rgba(0,0,0,0);}
@@ -623,8 +624,8 @@ body, h1, h2, h3, h4, h5, h6, p, a, button, input {
       localStorage.setItem('dq_last_order', JSON.stringify(orderData));
       localStorage.removeItem('dq_cart');
       
-      // توجيه لصفحة التأكيد
-      window.location.href = '/bookings/confirmation/';
+      // توجيه لصفحة التحميل أولاً ثم التأكيد
+      window.location.href = '/bookings/processing/';
     });
     
     function showError(msg) {
