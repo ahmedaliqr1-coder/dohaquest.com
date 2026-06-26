@@ -98,8 +98,9 @@ $new_mods = array(
     ),
     
     // Transparent header (important for hero effect)
-    'header_transparent' => true,
-    'header_transparent_default' => true,
+    'transparent_header_enable' => true,
+    'transparent_header_page' => false,
+    'transparent_header_device' => array('desktop' => true, 'mobile' => true),
     
     // Vertical padding
     'content_vertical_padding' => 'show',
@@ -151,6 +152,7 @@ if ($front_page_id) {
     update_post_meta($front_page_id, '_kad_post_feature', 'above');
     update_post_meta($front_page_id, '_kad_post_feature_position', 'behind');
     update_post_meta($front_page_id, '_kad_post_vertical_padding', 'show');
+    update_post_meta($front_page_id, '_kad_post_transparent', 'enable');  // Force transparent header on this page
     
     // Verify featured image
     $thumbnail_id = get_post_thumbnail_id($front_page_id);
