@@ -156,7 +156,7 @@ if ($front_page_id) {
     update_post_meta($front_page_id, '_kad_post_layout', 'default');
     update_post_meta($front_page_id, '_kad_post_title_layout', 'above');
     update_post_meta($front_page_id, '_kad_post_title_inner_layout', 'fullwidth');
-    update_post_meta($front_page_id, '_kad_post_title_height', json_encode(array('size' => array(380, '', ''), 'unit' => array('px', 'px', 'px'))));
+    update_post_meta($front_page_id, '_kad_post_title_height', json_encode(array('size' => array('desktop' => 380, 'tablet' => '', 'mobile' => ''), 'unit' => array('desktop' => 'px', 'tablet' => 'px', 'mobile' => 'px'))));
     update_post_meta($front_page_id, '_kad_post_title_align', 'center');
     update_post_meta($front_page_id, '_kad_post_feature', 'show');
     update_post_meta($front_page_id, '_kad_post_feature_position', 'behind');
