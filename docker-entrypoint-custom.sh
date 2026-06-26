@@ -73,11 +73,12 @@ mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
     -e "REPLACE INTO wp_options (option_name, option_value, autoload) VALUES ('siteurl', '$SITE_URL', 'yes'), ('home', '$SITE_URL', 'yes');" 2>/dev/null && \
     echo "URLs updated in database!" || echo "URL update skipped (DB may not be ready yet)"
 
-# Run WordPress initialization in background (after Apache starts)
-if [ -f /usr/local/bin/init-wordpress.sh ]; then
-    echo "Scheduling WordPress initialization in background..."
-    (sleep 20 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
-fi
+# WordPress initialization disabled for debugging
+# if [ -f /usr/local/bin/init-wordpress.sh ]; then
+#     echo "Scheduling WordPress initialization in background..."
+#     (sleep 20 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
+# fi
+echo "Init script disabled for debugging"
 
 # Start Apache in foreground (this is what Railway healthchecks)
 echo "Starting Apache on port $PORT..."
