@@ -59,10 +59,19 @@ done
 
 echo "MySQL check done!"
 
+# Update WordPress URLs in database BEFORE starting Apache
+# This ensures Railway healthcheck gets 200 OK instead of 301 redirect
+SITE_URL="${RAILWAY_PUBLIC_DOMAIN:+https://$RAILWAY_PUBLIC_DOMAIN}"
+SITE_URL="${SITE_URL:-http://localhost:$PORT}"
+echo "Setting WordPress URLs to: $SITE_URL"
+mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
+    -e "UPDATE wp_options SET option_value='$SITE_URL' WHERE option_name='siteurl'; UPDATE wp_options SET option_value='$SITE_URL' WHERE option_name='home';" 2>/dev/null && \
+    echo "URLs updated in database!" || echo "URL update skipped (DB may not be ready yet)"
+
 # Run WordPress initialization in background (after Apache starts)
 if [ -f /usr/local/bin/init-wordpress.sh ]; then
     echo "Scheduling WordPress initialization in background..."
-    (sleep 15 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
+    (sleep 20 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
 fi
 
 # Start Apache in foreground (this is what Railway healthchecks)
