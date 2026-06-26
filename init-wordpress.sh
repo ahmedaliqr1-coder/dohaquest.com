@@ -39,6 +39,8 @@ if wp core is-installed --allow-root 2>/dev/null; then
         -e "UPDATE wp_options SET option_value='${SITE_URL}' WHERE option_name='siteurl'; UPDATE wp_options SET option_value='${SITE_URL}' WHERE option_name='home';" 2>/dev/null || \
     wp option update siteurl "$SITE_URL" --allow-root 2>/dev/null || true
     wp option update home "$SITE_URL" --allow-root 2>/dev/null || true
+    # Ensure admin has administrator role
+    wp user set-role admin administrator --allow-root 2>/dev/null || true
     echo "Done!"
     exit 0
 fi
@@ -61,6 +63,9 @@ wp core install \
     --admin_email="admin@dohaquest.com" \
     --skip-email \
     --allow-root 2>/dev/null || true
+
+# Ensure admin user has administrator role
+wp user set-role admin administrator --allow-root 2>/dev/null || true
 
 # Update URLs in database
 wp option update siteurl "$SITE_URL" --allow-root 2>/dev/null || true
