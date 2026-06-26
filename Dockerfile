@@ -30,6 +30,10 @@ RUN apt-get update && apt-get install -y \
 RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/local/bin/wp
 
+# Fix Apache MPM conflict - disable event/worker, keep prefork (required for PHP mod)
+RUN a2dismod mpm_event mpm_worker 2>/dev/null || true \
+    && a2enmod mpm_prefork 2>/dev/null || true
+
 # Enable Apache modules
 RUN a2enmod rewrite headers expires deflate
 
