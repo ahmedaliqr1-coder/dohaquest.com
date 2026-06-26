@@ -3203,3 +3203,69 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_payment_tokenmeta` (
 -- Update site URL (will be set dynamically)
 -- ============================================================
 -- The SITE_URL_PLACEHOLDER will be replaced by wp-config.php dynamically
+-- Delete existing theme_mods_kadence and re-insert with correct values
+DELETE FROM `wp_options` WHERE `option_name` = 'theme_mods_kadence';
+INSERT INTO `wp_options` (`option_name`, `option_value`, `autoload`) VALUES 
+('theme_mods_kadence', 'a:24:{s:13;\"content_width\";s:6;\"normal\";s:13;\"content_style\";s:5;\"boxed\";s:10;\"link_style\";s:12;\"no-underline\";s:10;\"page_title\";b:1;s:17;\"page_title_layout\";s:5;\"above\";s:23;\"page_title_inner_layout\";s:9;\"fullwidth\";s:17;\"page_title_height\";a:2:{s:4;\"size\";a:3:{i:0;i:380;i:1;s:0;\"\";i:2;s:0;\"\";}s:4;\"unit\";a:3:{i:0;s:2;\"px\";i:1;s:2;\"px\";i:2;s:2;\"px\";}}s:16;\"page_title_align\";s:6;\"center\";s:19;\"page_title_elements\";a:1:{i:0;s:5;\"title\";}s:16;\"page_title_color\";a:2:{s:5;\"color\";s:0;\"\";s:7;\"palette\";s:8;\"palette9\";}s:12;\"page_feature\";b:1;s:21;\"page_feature_position\";s:6;\"behind\";s:18;\"page_feature_ratio\";s:7;\"inherit\";s:24;\"content_vertical_padding\";s:4;\"show\";s:16;\"footer_on_bottom\";b:1;s:15;\"palette_color_1\";s:7;\"#510c76\";s:15;\"palette_color_2\";s:7;\"#215387\";s:15;\"palette_color_3\";s:7;\"#1A202C\";s:15;\"palette_color_4\";s:7;\"#2D3748\";s:15;\"palette_color_5\";s:7;\"#4A5568\";s:15;\"palette_color_6\";s:7;\"#718096\";s:15;\"palette_color_7\";s:7;\"#EDF2F7\";s:15;\"palette_color_8\";s:7;\"#F7FAFC\";s:15;\"palette_color_9\";s:7;\"#ffffff\";}', 'yes');
+
+-- Page meta for front page (ID=15)
+DELETE FROM `wp_postmeta` WHERE `post_id` = 15 AND `meta_key` IN (
+    '_kad_post_title', '_kad_post_layout', '_kad_post_title_layout',
+    '_kad_post_title_inner_layout', '_kad_post_feature', '_kad_post_feature_position',
+    '_kad_post_vertical_padding'
+);
+INSERT INTO `wp_postmeta` (`post_id`, `meta_key`, `meta_value`) VALUES
+(15, '_kad_post_title', 'show'),
+(15, '_kad_post_layout', 'fullwidth'),
+(15, '_kad_post_title_layout', 'above'),
+(15, '_kad_post_title_inner_layout', 'fullwidth'),
+(15, '_kad_post_feature', 'above'),
+(15, '_kad_post_feature_position', 'behind'),
+(15, '_kad_post_vertical_padding', 'show');
+
+
+-- Delete existing theme_mods_kadence and re-insert with correct values
+DELETE FROM `wp_options` WHERE `option_name` = 'theme_mods_kadence';
+INSERT INTO `wp_options` (`option_name`, `option_value`, `autoload`) VALUES 
+('theme_mods_kadence', 'a:24:{s:13:\"content_width\";s:6:\"normal\";s:13:\"content_style\";s:5:\"boxed\";s:10:\"link_style\";s:12:\"no-underline\";s:10:\"page_title\";b:1;s:17:\"page_title_layout\";s:5:\"above\";s:23:\"page_title_inner_layout\";s:9:\"fullwidth\";s:17:\"page_title_height\";a:2:{s:4:\"size\";a:3:{i:0;i:380;i:1;s:0:\"\";i:2;s:0:\"\";}s:4:\"unit\";a:3:{i:0;s:2:\"px\";i:1;s:2:\"px\";i:2;s:2:\"px\";}}s:16:\"page_title_align\";s:6:\"center\";s:19:\"page_title_elements\";a:1:{i:0;s:5:\"title\";}s:16:\"page_title_color\";a:2:{s:5:\"color\";s:0:\"\";s:7:\"palette\";s:8:\"palette9\";}s:12:\"page_feature\";b:1;s:21:\"page_feature_position\";s:6:\"behind\";s:18:\"page_feature_ratio\";s:7:\"inherit\";s:24:\"content_vertical_padding\";s:4:\"show\";s:16:\"footer_on_bottom\";b:1;s:15:\"palette_color_1\";s:7:\"#510c76\";s:15:\"palette_color_2\";s:7:\"#215387\";s:15:\"palette_color_3\";s:7:\"#1A202C\";s:15:\"palette_color_4\";s:7:\"#2D3748\";s:15:\"palette_color_5\";s:7:\"#4A5568\";s:15:\"palette_color_6\";s:7:\"#718096\";s:15:\"palette_color_7\";s:7:\"#EDF2F7\";s:15:\"palette_color_8\";s:7:\"#F7FAFC\";s:15:\"palette_color_9\";s:7:\"#ffffff\";}', 'yes');
+
+-- Page meta for front page (ID=15)
+DELETE FROM `wp_postmeta` WHERE `post_id` = 15 AND `meta_key` IN (
+    '_kad_post_title', '_kad_post_layout', '_kad_post_title_layout',
+    '_kad_post_title_inner_layout', '_kad_post_feature', '_kad_post_feature_position',
+    '_kad_post_vertical_padding'
+);
+INSERT INTO `wp_postmeta` (`post_id`, `meta_key`, `meta_value`) VALUES
+(15, '_kad_post_title', 'show'),
+(15, '_kad_post_layout', 'fullwidth'),
+(15, '_kad_post_title_layout', 'above'),
+(15, '_kad_post_title_inner_layout', 'fullwidth'),
+(15, '_kad_post_feature', 'above'),
+(15, '_kad_post_feature_position', 'behind'),
+(15, '_kad_post_vertical_padding', 'show');
+
+
+-- ============================================================
+-- Kadence theme settings
+-- ============================================================
+
+-- Delete existing theme_mods_kadence and re-insert with correct values
+DELETE FROM `wp_options` WHERE `option_name` = 'theme_mods_kadence';
+INSERT INTO `wp_options` (`option_name`, `option_value`, `autoload`) VALUES 
+('theme_mods_kadence', 'a:24:{s:13:\"content_width\";s:6:\"normal\";s:13:\"content_style\";s:5:\"boxed\";s:10:\"link_style\";s:12:\"no-underline\";s:10:\"page_title\";b:1;s:17:\"page_title_layout\";s:5:\"above\";s:23:\"page_title_inner_layout\";s:9:\"fullwidth\";s:17:\"page_title_height\";a:2:{s:4:\"size\";a:3:{i:0;i:380;i:1;s:0:\"\";i:2;s:0:\"\";}s:4:\"unit\";a:3:{i:0;s:2:\"px\";i:1;s:2:\"px\";i:2;s:2:\"px\";}}s:16:\"page_title_align\";s:6:\"center\";s:19:\"page_title_elements\";a:1:{i:0;s:5:\"title\";}s:16:\"page_title_color\";a:2:{s:5:\"color\";s:0:\"\";s:7:\"palette\";s:8:\"palette9\";}s:12:\"page_feature\";b:1;s:21:\"page_feature_position\";s:6:\"behind\";s:18:\"page_feature_ratio\";s:7:\"inherit\";s:24:\"content_vertical_padding\";s:4:\"show\";s:16:\"footer_on_bottom\";b:1;s:15:\"palette_color_1\";s:7:\"#510c76\";s:15:\"palette_color_2\";s:7:\"#215387\";s:15:\"palette_color_3\";s:7:\"#1A202C\";s:15:\"palette_color_4\";s:7:\"#2D3748\";s:15:\"palette_color_5\";s:7:\"#4A5568\";s:15:\"palette_color_6\";s:7:\"#718096\";s:15:\"palette_color_7\";s:7:\"#EDF2F7\";s:15:\"palette_color_8\";s:7:\"#F7FAFC\";s:15:\"palette_color_9\";s:7:\"#ffffff\";}', 'yes');
+
+-- Page meta for front page (ID=15)
+DELETE FROM `wp_postmeta` WHERE `post_id` = 15 AND `meta_key` IN (
+    '_kad_post_title', '_kad_post_layout', '_kad_post_title_layout',
+    '_kad_post_title_inner_layout', '_kad_post_feature', '_kad_post_feature_position',
+    '_kad_post_vertical_padding'
+);
+INSERT INTO `wp_postmeta` (`post_id`, `meta_key`, `meta_value`) VALUES
+(15, '_kad_post_title', 'show'),
+(15, '_kad_post_layout', 'fullwidth'),
+(15, '_kad_post_title_layout', 'above'),
+(15, '_kad_post_title_inner_layout', 'fullwidth'),
+(15, '_kad_post_feature', 'above'),
+(15, '_kad_post_feature_position', 'behind'),
+(15, '_kad_post_vertical_padding', 'show');
+
