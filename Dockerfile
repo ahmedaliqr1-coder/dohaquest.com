@@ -65,6 +65,7 @@ COPY diag.php /var/www/html/diag.php
 COPY fix-roles.php /var/www/html/fix-roles.php
 COPY get-media-ids.php /var/www/html/get-media-ids.php
 COPY setup-theme.php /var/www/html/setup-theme.php
+COPY fix-nav.php /var/www/html/fix-nav.php
 
 # Copy debug endpoint
 COPY debug.php /var/www/html/debug.php
