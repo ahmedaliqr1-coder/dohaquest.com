@@ -1,33 +1,58 @@
 #!/bin/bash
-# NO set -e - we don't want the script to exit on any error
 
 echo "=== DohaQuest WordPress Container Starting ==="
+echo "Date: $(date)"
 
 # Railway sets PORT environment variable
 PORT="${PORT:-80}"
 echo "PORT: $PORT"
 
-# Update Apache to listen on the correct PORT
-sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf
-sed -i "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/g" /etc/apache2/sites-available/000-default.conf
-sed -i "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/g" /etc/apache2/sites-enabled/000-default.conf 2>/dev/null || true
+# Export PORT for Apache
+export APACHE_PORT=$PORT
+
+# Update Apache ports.conf to listen on correct PORT
+echo "Updating Apache port configuration..."
+cat /etc/apache2/ports.conf || echo "ports.conf not found"
+
+# Replace Listen 80 with Listen $PORT
+if [ -f /etc/apache2/ports.conf ]; then
+    sed -i "s/Listen 80$/Listen $PORT/" /etc/apache2/ports.conf
+    echo "Updated ports.conf:"
+    cat /etc/apache2/ports.conf
+fi
+
+# Update VirtualHost port
+if [ -f /etc/apache2/sites-available/000-default.conf ]; then
+    sed -i "s/\*:80>/\*:$PORT>/g" /etc/apache2/sites-available/000-default.conf
+    sed -i "s/\*:\${PORT:-80}>/\*:$PORT>/g" /etc/apache2/sites-available/000-default.conf
+fi
+if [ -f /etc/apache2/sites-enabled/000-default.conf ]; then
+    sed -i "s/\*:80>/\*:$PORT>/g" /etc/apache2/sites-enabled/000-default.conf
+    sed -i "s/\*:\${PORT:-80}>/\*:$PORT>/g" /etc/apache2/sites-enabled/000-default.conf
+fi
 
 echo "Apache configured to listen on port $PORT"
 
-# Database connection settings from Railway environment variables
-DB_HOST="${WORDPRESS_DB_HOST:-${MYSQLHOST:-mysql.railway.internal}}"
-DB_PORT="${MYSQLPORT:-3306}"
+# Database connection settings
+DB_HOST="${WORDPRESS_DB_HOST:-}"
+if [ -z "$DB_HOST" ]; then
+    MYSQL_HOST="${MYSQLHOST:-mysql.railway.internal}"
+    MYSQL_PORT="${MYSQLPORT:-3306}"
+    DB_HOST="${MYSQL_HOST}:${MYSQL_PORT}"
+fi
 DB_USER="${WORDPRESS_DB_USER:-${MYSQLUSER:-root}}"
 DB_PASS="${WORDPRESS_DB_PASSWORD:-${MYSQLPASSWORD:-}}"
 DB_NAME="${WORDPRESS_DB_NAME:-${MYSQLDATABASE:-railway}}"
 
-# Split host:port if present in DB_HOST
+# Parse host:port
 if [[ "$DB_HOST" == *":"* ]]; then
     DB_PORT="${DB_HOST##*:}"
     DB_HOST="${DB_HOST%%:*}"
+else
+    DB_PORT="3306"
 fi
 
-echo "DB_HOST=$DB_HOST DB_PORT=$DB_PORT DB_USER=$DB_USER DB_NAME=$DB_NAME"
+echo "DB: $DB_HOST:$DB_PORT/$DB_NAME as $DB_USER"
 
 # Wait for MySQL (max 60 seconds)
 echo "Waiting for MySQL..."
@@ -45,7 +70,7 @@ done
 
 echo "MySQL check done!"
 
-# Set WordPress site URL (use http:// - Railway terminates SSL at proxy level)
+# Set WordPress site URL
 if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
     SITE_URL="http://$RAILWAY_PUBLIC_DOMAIN"
 else
@@ -53,13 +78,12 @@ else
 fi
 echo "Setting WordPress URLs to: $SITE_URL"
 
-# Update URLs in database using REPLACE INTO (works even if rows don't exist)
 mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
     -e "REPLACE INTO wp_options (option_name, option_value, autoload) VALUES ('siteurl', '$SITE_URL', 'yes'), ('home', '$SITE_URL', 'yes');" 2>/dev/null \
     && echo "URLs updated in database!" \
-    || echo "URL update skipped (will retry via init script)"
+    || echo "URL update skipped"
 
-# Run WordPress initialization in background (after Apache starts)
+# Run WordPress initialization in background
 if [ -f /usr/local/bin/init-wordpress.sh ]; then
     echo "Scheduling WordPress initialization in background..."
     (sleep 15 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
@@ -67,4 +91,4 @@ fi
 
 # Start Apache in foreground
 echo "Starting Apache on port $PORT..."
-exec apache2ctl -D FOREGROUND
+exec apache2-foreground

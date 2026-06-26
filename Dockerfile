@@ -62,7 +62,7 @@ COPY init.sql /var/www/html/init.sql
 COPY init-wordpress.sh /usr/local/bin/init-wordpress.sh
 RUN chmod +x /usr/local/bin/init-wordpress.sh
 
-# Copy custom entrypoint
+# Copy custom startup script
 COPY docker-entrypoint-custom.sh /usr/local/bin/docker-entrypoint-custom.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 
@@ -70,16 +70,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
 # Configure Apache VirtualHost
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html\n\
-    <Directory /var/www/html>\n\
-        Options FollowSymLinks\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
-    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+RUN printf '<VirtualHost *:${PORT:-80}>\n    DocumentRoot /var/www/html\n    <Directory /var/www/html>\n        Options FollowSymLinks\n        AllowOverride All\n        Require all granted\n    </Directory>\n    ErrorLog ${APACHE_LOG_DIR}/error.log\n    CustomLog ${APACHE_LOG_DIR}/access.log combined\n</VirtualHost>\n' > /etc/apache2/sites-available/000-default.conf
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
@@ -89,4 +80,6 @@ RUN chown -R www-data:www-data /var/www/html \
 # Railway uses dynamic PORT
 EXPOSE 80
 
+# Use ENTRYPOINT with CMD - the CMD will NOT be passed as argument since we override ENTRYPOINT
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
+CMD []
