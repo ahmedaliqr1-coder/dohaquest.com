@@ -11,22 +11,27 @@ RUN apt-get update && apt-get install -y \
 RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/local/bin/wp
 
+# CRITICAL: Copy WordPress core from /usr/src/wordpress to /var/www/html at BUILD TIME
+# The official wordpress image stores core in /usr/src/wordpress and copies it at runtime via entrypoint
+# Since we override the entrypoint, we must do this copy at build time
+RUN cp -r /usr/src/wordpress/. /var/www/html/
+
 # Enable mod_rewrite
 RUN a2enmod rewrite
 
-# Fix Apache MPM conflict - disable mpm_event, enable mpm_prefork only
+# Fix Apache MPM conflict - ensure only mpm_prefork is loaded
 RUN a2dismod mpm_event 2>/dev/null || true \
     && a2enmod mpm_prefork 2>/dev/null || true
 
 # Allow .htaccess overrides
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
-# Copy custom WordPress files
+# Copy custom WordPress files (these override the core files above)
 COPY wp-content/plugins/ /var/www/html/wp-content/plugins/
 COPY wp-content/themes/ /var/www/html/wp-content/themes/
 COPY wp-content/uploads/ /var/www/html/wp-content/uploads/
 
-# Copy wp-config
+# Copy wp-config (overrides the sample one)
 COPY wp-config.php /var/www/html/wp-config.php
 
 # Copy SQL dump
@@ -41,8 +46,8 @@ COPY docker-entrypoint-custom.sh /usr/local/bin/docker-entrypoint-custom.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/wp-content \
-    && chmod -R 755 /var/www/html/wp-content
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
 # Railway uses dynamic PORT
 EXPOSE 80
