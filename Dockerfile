@@ -68,6 +68,7 @@ COPY setup-theme.php /var/www/html/setup-theme.php
 COPY fix-nav.php /var/www/html/fix-nav.php
 COPY fix-featured.php /var/www/html/fix-featured.php
 COPY fix-kad-meta.php /var/www/html/fix-kad-meta.php
+COPY apply-theme-settings.php /var/www/html/apply-theme-settings.php
 
 # Copy debug endpoint
 COPY debug.php /var/www/html/debug.php
