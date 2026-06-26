@@ -43,4 +43,3 @@ RUN chown -R www-data:www-data /var/www/html/wp-content \
 EXPOSE 80
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
-CMD ["apache2-foreground"]

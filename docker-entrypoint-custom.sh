@@ -33,19 +33,12 @@ done
 
 echo "MySQL is ready!"
 
-# تشغيل الـ WordPress Docker entrypoint الأصلي في الخلفية
-docker-entrypoint.sh apache2-foreground &
-APACHE_PID=$!
-
-# انتظار Apache يبدأ
-sleep 8
-
-# تشغيل init script مرة واحدة فقط
+# تشغيل init script مرة واحدة فقط (في الخلفية)
 if [ -f /usr/local/bin/init-wordpress.sh ]; then
-    echo "Running WordPress initialization..."
+    echo "Running WordPress initialization in background..."
     cd /var/www/html
-    /usr/local/bin/init-wordpress.sh || echo "Init script completed with warnings"
+    /usr/local/bin/init-wordpress.sh &
 fi
 
-# انتظار Apache
-wait $APACHE_PID
+# تشغيل WordPress entrypoint الأصلي (يشغل Apache)
+exec docker-entrypoint.sh apache2-foreground
