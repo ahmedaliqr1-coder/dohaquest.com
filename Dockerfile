@@ -80,8 +80,8 @@ RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 # Configure Apache - allow .htaccess overrides
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
-# Configure Apache VirtualHost
-RUN printf '<VirtualHost *:${PORT:-80}>\n    DocumentRoot /var/www/html\n    <Directory /var/www/html>\n        Options FollowSymLinks\n        AllowOverride All\n        Require all granted\n    </Directory>\n    ErrorLog ${APACHE_LOG_DIR}/error.log\n    CustomLog ${APACHE_LOG_DIR}/access.log combined\n</VirtualHost>\n' > /etc/apache2/sites-available/000-default.conf
+# Configure Apache VirtualHost - use placeholder PORT that will be replaced at runtime
+RUN printf '<VirtualHost *:APACHE_PORT>\n    DocumentRoot /var/www/html\n    <Directory /var/www/html>\n        Options FollowSymLinks\n        AllowOverride All\n        Require all granted\n    </Directory>\n    ErrorLog ${APACHE_LOG_DIR}/error.log\n    CustomLog ${APACHE_LOG_DIR}/access.log combined\n</VirtualHost>\n' > /etc/apache2/sites-available/000-default.conf
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \

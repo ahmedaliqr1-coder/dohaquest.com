@@ -32,20 +32,28 @@ define('NONCE_SALT',       'dohaquest-nonce-salt-2026-railway-fM1pV9');
 
 $table_prefix = 'wp_';
 
+// ** HTTPS behind Railway proxy ** //
+// Railway terminates SSL at proxy level - detect and force HTTPS
+if ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
+    $_SERVER['HTTPS'] = 'on';
+}
+
 // ** WordPress URLs ** //
-// Use http:// internally - Railway terminates SSL at proxy level
+// Use https:// since Railway proxy handles SSL termination
 $_railway_domain = getenv('RAILWAY_PUBLIC_DOMAIN') ?: '';
-$_railway_url = !empty($_railway_domain) ? 'http://' . $_railway_domain : 'http://localhost';
+if ( !empty($_railway_domain) ) {
+    $_railway_url = 'https://' . $_railway_domain;
+} else {
+    $_railway_url = 'http://localhost';
+}
 define( 'WP_HOME',    $_railway_url );
 define( 'WP_SITEURL', $_railway_url );
 
-// ** Debug ** //
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', true );
-define( 'WP_DEBUG_DISPLAY', true );
-@ini_set( 'display_errors', 1 );
-@ini_set( 'log_errors', 1 );
-@ini_set( 'error_log', 'php://stderr' );
+// ** Debug - disabled in production ** //
+define( 'WP_DEBUG', false );
+define( 'WP_DEBUG_LOG', false );
+define( 'WP_DEBUG_DISPLAY', false );
+@ini_set( 'display_errors', 0 );
 
 // ** Language ** //
 define( 'WPLANG', '' );
@@ -53,10 +61,9 @@ define( 'WPLANG', '' );
 // ** Memory ** //
 define( 'WP_MEMORY_LIMIT', '256M' );
 
-// ** HTTPS behind Railway proxy ** //
-if ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
-    $_SERVER['HTTPS'] = 'on';
-}
+// ** Performance ** //
+define( 'WP_CACHE', false );
+define( 'CONCATENATE_SCRIPTS', false );
 
 // ** Absolute path ** //
 if ( ! defined( 'ABSPATH' ) ) {
