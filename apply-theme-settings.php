@@ -43,7 +43,7 @@ echo "1. kadence_global_settings: " . ($result !== false ? "OK" : "FAILED: " . $
 // 2. THEME MODS - Complete settings from original site
 // ============================================================
 
-// Get current theme mods
+// Get current theme mods (preserve custom_logo, nav_menu_locations, header_image)
 $theme_mods = get_option('theme_mods_kadence', array());
 if (!is_array($theme_mods)) $theme_mods = array();
 
@@ -61,7 +61,7 @@ $new_mods = array(
     // Page title settings
     'page_title' => true,
     'page_title_layout' => 'above',
-    'page_title_inner_layout' => 'standard',
+    'page_title_inner_layout' => 'fullwidth',
     'page_title_height' => array(
         'size' => array(380, '', ''),
         'unit' => array('px', 'px', 'px'),
@@ -80,9 +80,6 @@ $new_mods = array(
     'page_feature_position' => 'behind',
     'page_feature_ratio' => 'inherit',
     
-    // Hero layout: fullwidth
-    'page_title_inner_layout' => 'fullwidth',
-    
     // Global colors
     'palette_color_1' => '#510c76',
     'palette_color_2' => '#215387',
@@ -100,6 +97,10 @@ $new_mods = array(
         'unit' => array('px', 'px', 'px'),
     ),
     
+    // Transparent header (important for hero effect)
+    'header_transparent' => true,
+    'header_transparent_default' => true,
+    
     // Vertical padding
     'content_vertical_padding' => 'show',
     
@@ -107,14 +108,19 @@ $new_mods = array(
     'footer_on_bottom' => true,
 );
 
-// Merge with existing mods
+// Merge with existing mods (preserve custom_logo, nav_menu_locations, header_image)
 foreach ($new_mods as $key => $value) {
     $theme_mods[$key] = $value;
 }
 
-// Update theme mods
-$result = update_option('theme_mods_kadence', $theme_mods);
-echo "2. theme_mods_kadence updated: " . ($result ? "OK (changed)" : "OK (no change needed)") . "\n";
+// Force update by deleting and re-inserting
+$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name = 'theme_mods_kadence'");
+$result = $wpdb->insert($wpdb->options, array(
+    'option_name' => 'theme_mods_kadence',
+    'option_value' => serialize($theme_mods),
+    'autoload' => 'yes'
+));
+echo "2. theme_mods_kadence: " . ($result !== false ? "OK (inserted fresh)" : "FAILED: " . $wpdb->last_error) . "\n";
 echo "   Keys set: " . implode(', ', array_keys($new_mods)) . "\n";
 
 // ============================================================
@@ -198,11 +204,16 @@ echo "   Caches cleared: OK\n";
 echo "\n6. VERIFICATION:\n";
 $mods = get_option('theme_mods_kadence', array());
 echo "   content_width: " . ($mods['content_width'] ?? 'not set') . "\n";
-echo "   page_title: " . ($mods['page_title'] ?? 'not set') . "\n";
+echo "   page_title: " . (isset($mods['page_title']) ? ($mods['page_title'] ? 'true' : 'false') : 'not set') . "\n";
 echo "   page_title_layout: " . ($mods['page_title_layout'] ?? 'not set') . "\n";
-echo "   page_feature: " . ($mods['page_feature'] ?? 'not set') . "\n";
+echo "   page_feature: " . (isset($mods['page_feature']) ? ($mods['page_feature'] ? 'true' : 'false') : 'not set') . "\n";
 echo "   page_feature_position: " . ($mods['page_feature_position'] ?? 'not set') . "\n";
 echo "   link_style: " . ($mods['link_style'] ?? 'not set') . "\n";
+echo "   header_transparent: " . (isset($mods['header_transparent']) ? ($mods['header_transparent'] ? 'true' : 'false') : 'not set') . "\n";
+echo "   palette_color_1: " . ($mods['palette_color_1'] ?? 'not set') . "\n";
+echo "   custom_logo: " . ($mods['custom_logo'] ?? 'not set') . "\n";
+echo "   nav_menu_locations: " . json_encode($mods['nav_menu_locations'] ?? null) . "\n";
+echo "   header_image: " . ($mods['header_image'] ?? 'not set') . "\n";
 
 echo "\n=== DONE! ===\n";
 echo "Visit the site to check: " . get_option('siteurl') . "\n";
