@@ -57,6 +57,13 @@ $new_mods = array(
     
     // Link style: no-underline
     'link_style' => 'no-underline',
+    // Link color style (this is what Kadence uses for body class 'link-style-*')
+    'link_color' => array(
+        'highlight'      => 'palette1',
+        'highlight-alt'  => 'palette2',
+        'highlight-alt2' => 'palette9',
+        'style'          => 'no-underline',
+    ),
     
     // Page title settings
     'page_title' => true,
