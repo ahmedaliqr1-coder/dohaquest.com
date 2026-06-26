@@ -46,4 +46,14 @@ mysql -h"$MYSQL_HOST" -P"$MYSQL_PORT" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
     -e "REPLACE INTO wp_options (option_name, option_value, autoload) VALUES ('siteurl', '$SITE_URL', 'yes'), ('home', '$SITE_URL', 'yes');" 2>/dev/null || true
 
 echo "=== STARTING APACHE ==="
+# Debug MPM
+echo "=== MPM MODS ENABLED ==="
+ls -la /etc/apache2/mods-enabled/ | grep mpm || echo "No MPM mods found"
+# Fix MPM at runtime
+rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf
+rm -f /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf
+ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load 2>/dev/null || true
+ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf 2>/dev/null || true
+echo "=== MPM AFTER FIX ==="
+ls -la /etc/apache2/mods-enabled/ | grep mpm || echo "No MPM mods found"
 exec apache2-foreground
