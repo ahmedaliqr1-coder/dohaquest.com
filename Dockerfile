@@ -34,6 +34,9 @@ COPY wp-content/uploads/ /var/www/html/wp-content/uploads/
 # Copy wp-config (overrides the sample one)
 COPY wp-config.php /var/www/html/wp-config.php
 
+# Copy healthcheck endpoint (returns 200 OK for Railway healthcheck)
+COPY healthcheck.php /var/www/html/healthcheck.php
+
 # Copy SQL dump
 COPY init.sql /var/www/html/init.sql
 
