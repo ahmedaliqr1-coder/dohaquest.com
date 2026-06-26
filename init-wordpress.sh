@@ -106,4 +106,54 @@ wp option update woocommerce_shop_page_id 76 --allow-root 2>/dev/null || true
 wp option update show_on_front 'page' --allow-root 2>/dev/null || true
 wp option update page_on_front 15 --allow-root 2>/dev/null || true
 
+# Fix wp_user_roles
+wp role reset administrator --allow-root 2>/dev/null || true
+wp role reset editor --allow-root 2>/dev/null || true
+wp user set-role admin administrator --allow-root 2>/dev/null || true
+
+# Apply Kadence theme settings (from original site)
+echo "Applying Kadence theme settings..."
+wp eval '
+$mods = get_option("theme_mods_kadence", array());
+$mods["content_width"] = "normal";
+$mods["content_style"] = "boxed";
+$mods["link_style"] = "no-underline";
+$mods["page_title"] = true;
+$mods["page_title_layout"] = "above";
+$mods["page_title_inner_layout"] = "fullwidth";
+$mods["page_title_height"] = array("size" => array(380, "", ""), "unit" => array("px", "px", "px"));
+$mods["page_title_align"] = "center";
+$mods["page_title_elements"] = array("title");
+$mods["page_title_color"] = array("color" => "", "palette" => "palette9");
+$mods["page_feature"] = true;
+$mods["page_feature_position"] = "behind";
+$mods["page_feature_ratio"] = "inherit";
+$mods["content_vertical_padding"] = "show";
+$mods["footer_on_bottom"] = true;
+$mods["palette_color_1"] = "#510c76";
+$mods["palette_color_2"] = "#215387";
+$mods["palette_color_3"] = "#1A202C";
+$mods["palette_color_4"] = "#2D3748";
+$mods["palette_color_5"] = "#4A5568";
+$mods["palette_color_6"] = "#718096";
+$mods["palette_color_7"] = "#EDF2F7";
+$mods["palette_color_8"] = "#F7FAFC";
+$mods["palette_color_9"] = "#ffffff";
+update_option("theme_mods_kadence", $mods);
+echo "theme_mods_kadence updated\n";
+' --allow-root 2>/dev/null || true
+
+# Apply page meta for front page
+wp eval '
+$front_id = 15;
+update_post_meta($front_id, "_kad_post_title", "show");
+update_post_meta($front_id, "_kad_post_layout", "fullwidth");
+update_post_meta($front_id, "_kad_post_title_layout", "above");
+update_post_meta($front_id, "_kad_post_title_inner_layout", "fullwidth");
+update_post_meta($front_id, "_kad_post_feature", "above");
+update_post_meta($front_id, "_kad_post_feature_position", "behind");
+update_post_meta($front_id, "_kad_post_vertical_padding", "show");
+echo "Page meta updated\n";
+' --allow-root 2>/dev/null || true
+
 echo "=== WordPress setup complete! ==="
