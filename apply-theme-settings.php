@@ -72,8 +72,8 @@ $new_mods = array(
     'page_title_layout' => 'above',
     'page_title_inner_layout' => 'fullwidth',
     'page_title_height' => array(
-        'size' => array(380, '', ''),
-        'unit' => array('px', 'px', 'px'),
+        'size' => array('desktop' => 380, 'tablet' => '', 'mobile' => ''),
+        'unit' => array('desktop' => 'px', 'tablet' => 'px', 'mobile' => 'px'),
     ),
     'page_title_align' => 'center',
     'page_title_elements' => array('title'),
