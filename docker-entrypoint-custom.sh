@@ -5,7 +5,23 @@ echo "=== DohaQuest WordPress Container Starting ==="
 
 # Railway sets PORT environment variable - Apache must listen on it
 PORT="${PORT:-80}"
-echo "Using PORT: $PORT"
+echo "PORT: $PORT"
+
+# Fix Apache MPM conflict - ensure only mpm_prefork is loaded
+# This prevents "More than one MPM loaded" error
+if [ -f /etc/apache2/mods-enabled/mpm_event.load ]; then
+    rm -f /etc/apache2/mods-enabled/mpm_event.load
+    rm -f /etc/apache2/mods-enabled/mpm_event.conf
+fi
+if [ -f /etc/apache2/mods-enabled/mpm_worker.load ]; then
+    rm -f /etc/apache2/mods-enabled/mpm_worker.load
+    rm -f /etc/apache2/mods-enabled/mpm_worker.conf
+fi
+# Ensure mpm_prefork is enabled
+if [ ! -f /etc/apache2/mods-enabled/mpm_prefork.load ]; then
+    ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load
+    ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf 2>/dev/null || true
+fi
 
 # Fix Apache to listen on the correct PORT
 sed -i "s/Listen 80/Listen $PORT/" /etc/apache2/ports.conf
@@ -46,7 +62,7 @@ echo "MySQL check done!"
 # Run WordPress initialization in background (after Apache starts)
 if [ -f /usr/local/bin/init-wordpress.sh ]; then
     echo "Scheduling WordPress initialization in background..."
-    (sleep 10 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
+    (sleep 15 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
 fi
 
 # Start Apache in foreground (this is what Railway healthchecks)

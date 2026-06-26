@@ -14,6 +14,10 @@ RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh
 # Enable mod_rewrite
 RUN a2enmod rewrite
 
+# Fix Apache MPM conflict - disable mpm_event, enable mpm_prefork only
+RUN a2dismod mpm_event 2>/dev/null || true \
+    && a2enmod mpm_prefork 2>/dev/null || true
+
 # Allow .htaccess overrides
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
@@ -40,7 +44,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 RUN chown -R www-data:www-data /var/www/html/wp-content \
     && chmod -R 755 /var/www/html/wp-content
 
-# Railway uses dynamic PORT - expose it
+# Railway uses dynamic PORT
 EXPOSE 80
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-custom.sh"]
