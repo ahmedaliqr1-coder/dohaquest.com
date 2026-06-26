@@ -66,6 +66,10 @@ if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
     echo "URLs updated in database!"
 fi
 
-echo "Init script disabled for debugging"
+# Run init script in background (non-blocking)
+if [ -f /usr/local/bin/init-wordpress.sh ]; then
+    chmod +x /usr/local/bin/init-wordpress.sh
+    /usr/local/bin/init-wordpress.sh &
+fi
 
 exec apache2-foreground
