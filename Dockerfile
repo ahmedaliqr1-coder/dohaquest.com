@@ -37,6 +37,9 @@ COPY wp-config.php /var/www/html/wp-config.php
 # Copy healthcheck endpoint (returns 200 OK for Railway healthcheck)
 COPY healthcheck.php /var/www/html/healthcheck.php
 
+# Copy .htaccess for WordPress URL rewriting
+COPY .htaccess /var/www/html/.htaccess
+
 # Copy SQL dump
 COPY init.sql /var/www/html/init.sql
 
