@@ -1,31 +1,16 @@
 #!/bin/bash
-set -e
+# NO set -e - we don't want the script to exit on any error
 
 echo "=== DohaQuest WordPress Container Starting ==="
 
-# Railway sets PORT environment variable - Apache must listen on it
+# Railway sets PORT environment variable
 PORT="${PORT:-80}"
 echo "PORT: $PORT"
 
-# Fix Apache MPM conflict - ensure only mpm_prefork is loaded
-# This prevents "More than one MPM loaded" error
-if [ -f /etc/apache2/mods-enabled/mpm_event.load ]; then
-    rm -f /etc/apache2/mods-enabled/mpm_event.load
-    rm -f /etc/apache2/mods-enabled/mpm_event.conf
-fi
-if [ -f /etc/apache2/mods-enabled/mpm_worker.load ]; then
-    rm -f /etc/apache2/mods-enabled/mpm_worker.load
-    rm -f /etc/apache2/mods-enabled/mpm_worker.conf
-fi
-# Ensure mpm_prefork is enabled
-if [ ! -f /etc/apache2/mods-enabled/mpm_prefork.load ]; then
-    ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load
-    ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf 2>/dev/null || true
-fi
-
-# Fix Apache to listen on the correct PORT
-sed -i "s/Listen 80/Listen $PORT/" /etc/apache2/ports.conf
-sed -i "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/" /etc/apache2/sites-enabled/000-default.conf 2>/dev/null || true
+# Update Apache to listen on the correct PORT
+sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf
+sed -i "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/g" /etc/apache2/sites-available/000-default.conf
+sed -i "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/g" /etc/apache2/sites-enabled/000-default.conf 2>/dev/null || true
 
 echo "Apache configured to listen on port $PORT"
 
@@ -42,9 +27,10 @@ if [[ "$DB_HOST" == *":"* ]]; then
     DB_HOST="${DB_HOST%%:*}"
 fi
 
-echo "Connecting to MySQL at $DB_HOST:$DB_PORT as $DB_USER..."
+echo "DB_HOST=$DB_HOST DB_PORT=$DB_PORT DB_USER=$DB_USER DB_NAME=$DB_NAME"
 
 # Wait for MySQL (max 60 seconds)
+echo "Waiting for MySQL..."
 max_tries=20
 count=0
 until mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" -e "SELECT 1" > /dev/null 2>&1; do
@@ -59,27 +45,26 @@ done
 
 echo "MySQL check done!"
 
-# Update WordPress URLs in database BEFORE starting Apache
-# This ensures Railway healthcheck gets 200 OK instead of 301 redirect
-# IMPORTANT: Use http:// not https:// - Railway terminates SSL at proxy level
-# WordPress behind Railway proxy should use http:// internally
+# Set WordPress site URL (use http:// - Railway terminates SSL at proxy level)
 if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
     SITE_URL="http://$RAILWAY_PUBLIC_DOMAIN"
 else
     SITE_URL="http://localhost:$PORT"
 fi
 echo "Setting WordPress URLs to: $SITE_URL"
+
+# Update URLs in database using REPLACE INTO (works even if rows don't exist)
 mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
-    -e "REPLACE INTO wp_options (option_name, option_value, autoload) VALUES ('siteurl', '$SITE_URL', 'yes'), ('home', '$SITE_URL', 'yes');" 2>/dev/null && \
-    echo "URLs updated in database!" || echo "URL update skipped (DB may not be ready yet)"
+    -e "REPLACE INTO wp_options (option_name, option_value, autoload) VALUES ('siteurl', '$SITE_URL', 'yes'), ('home', '$SITE_URL', 'yes');" 2>/dev/null \
+    && echo "URLs updated in database!" \
+    || echo "URL update skipped (will retry via init script)"
 
-# WordPress initialization disabled for debugging
-# if [ -f /usr/local/bin/init-wordpress.sh ]; then
-#     echo "Scheduling WordPress initialization in background..."
-#     (sleep 20 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
-# fi
-echo "Init script disabled for debugging"
+# Run WordPress initialization in background (after Apache starts)
+if [ -f /usr/local/bin/init-wordpress.sh ]; then
+    echo "Scheduling WordPress initialization in background..."
+    (sleep 15 && cd /var/www/html && /usr/local/bin/init-wordpress.sh) &
+fi
 
-# Start Apache in foreground (this is what Railway healthchecks)
+# Start Apache in foreground
 echo "Starting Apache on port $PORT..."
-exec apache2-foreground
+exec apache2ctl -D FOREGROUND

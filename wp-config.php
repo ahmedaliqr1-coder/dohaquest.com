@@ -5,10 +5,18 @@
  */
 
 // ** Database Settings ** //
+// Build DB_HOST correctly - handle host:port format
+$_db_host = getenv('WORDPRESS_DB_HOST') ?: '';
+if ( empty($_db_host) ) {
+    $_mysql_host = getenv('MYSQLHOST') ?: 'mysql.railway.internal';
+    $_mysql_port = getenv('MYSQLPORT') ?: '3306';
+    $_db_host = $_mysql_host . ':' . $_mysql_port;
+}
+
 define( 'DB_NAME',     getenv('WORDPRESS_DB_NAME')     ?: getenv('MYSQLDATABASE') ?: 'railway' );
 define( 'DB_USER',     getenv('WORDPRESS_DB_USER')     ?: getenv('MYSQLUSER')     ?: 'root' );
 define( 'DB_PASSWORD', getenv('WORDPRESS_DB_PASSWORD') ?: getenv('MYSQLPASSWORD') ?: '' );
-define( 'DB_HOST',     getenv('WORDPRESS_DB_HOST')     ?: getenv('MYSQLHOST') . ':' . (getenv('MYSQLPORT') ?: '3306') ?: 'mysql.railway.internal:3306' );
+define( 'DB_HOST',     $_db_host );
 define( 'DB_CHARSET',  'utf8mb4' );
 define( 'DB_COLLATE',  '' );
 
@@ -25,20 +33,17 @@ define('NONCE_SALT',       'dohaquest-nonce-salt-2026-railway-fM1pV9');
 $table_prefix = 'wp_';
 
 // ** WordPress URLs ** //
-// Use http:// internally so Railway healthcheck (which connects via HTTP) gets 200 OK
-// Railway's proxy handles HTTPS termination externally
-$railway_domain = getenv('RAILWAY_PUBLIC_DOMAIN') ?: getenv('RAILWAY_SERVICE_DOHAQUEST_COM_URL') ?: '';
-// Use http:// to avoid 301 redirect that breaks Railway healthcheck
-$railway_url = $railway_domain ? 'http://' . $railway_domain : 'http://localhost';
-define( 'WP_HOME',    $railway_url );
-define( 'WP_SITEURL', $railway_url );
+// Use http:// internally - Railway terminates SSL at proxy level
+$_railway_domain = getenv('RAILWAY_PUBLIC_DOMAIN') ?: '';
+$_railway_url = !empty($_railway_domain) ? 'http://' . $_railway_domain : 'http://localhost';
+define( 'WP_HOME',    $_railway_url );
+define( 'WP_SITEURL', $_railway_url );
 
-// ** Debug - Enable to see PHP errors in Railway logs ** //
+// ** Debug ** //
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 define( 'WP_DEBUG_DISPLAY', false );
 @ini_set( 'display_errors', 0 );
-// Log PHP errors to stderr so they appear in Railway deploy logs
 @ini_set( 'log_errors', 1 );
 @ini_set( 'error_log', 'php://stderr' );
 
@@ -48,9 +53,7 @@ define( 'WPLANG', '' );
 // ** Memory ** //
 define( 'WP_MEMORY_LIMIT', '256M' );
 
-// ** HTTPS behind proxy ** //
-// Railway terminates SSL at the proxy level and forwards as HTTP internally
-// We tell WordPress it's HTTPS via the X-Forwarded-Proto header
+// ** HTTPS behind Railway proxy ** //
 if ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
     $_SERVER['HTTPS'] = 'on';
 }

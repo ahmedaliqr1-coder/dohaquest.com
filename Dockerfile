@@ -1,46 +1,58 @@
-FROM wordpress:6.7-php8.2-apache
+FROM php:8.2-apache
 
-# Install required tools
+# Install required PHP extensions and tools
 RUN apt-get update && apt-get install -y \
     default-mysql-client \
-    less \
+    libpng-dev \
+    libjpeg-dev \
+    libwebp-dev \
+    libzip-dev \
+    libicu-dev \
+    libxml2-dev \
+    libcurl4-openssl-dev \
+    unzip \
     curl \
+    less \
+    && docker-php-ext-configure gd --with-jpeg --with-webp \
+    && docker-php-ext-install \
+        gd \
+        mysqli \
+        pdo_mysql \
+        zip \
+        intl \
+        xml \
+        curl \
+        opcache \
+        exif \
     && rm -rf /var/lib/apt/lists/*
 
 # Install WP-CLI
 RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/local/bin/wp
 
-# CRITICAL: Copy WordPress core from /usr/src/wordpress to /var/www/html at BUILD TIME
-# The official wordpress image stores core in /usr/src/wordpress and copies it at runtime via entrypoint
-# Since we override the entrypoint, we must do this copy at build time
-RUN cp -r /usr/src/wordpress/. /var/www/html/
+# Enable Apache modules
+RUN a2enmod rewrite headers expires deflate
 
-# Enable mod_rewrite
-RUN a2enmod rewrite
+# Download WordPress core
+RUN curl -o /tmp/wordpress.tar.gz https://wordpress.org/wordpress-6.7.tar.gz \
+    && tar -xzf /tmp/wordpress.tar.gz -C /var/www/html --strip-components=1 \
+    && rm /tmp/wordpress.tar.gz
 
-# Fix Apache MPM conflict - ensure only mpm_prefork is loaded
-RUN a2dismod mpm_event 2>/dev/null || true \
-    && a2enmod mpm_prefork 2>/dev/null || true
-
-# Allow .htaccess overrides
-RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
-
-# Copy custom WordPress files (these override the core files above)
+# Copy custom WordPress files (plugins, themes, uploads)
 COPY wp-content/plugins/ /var/www/html/wp-content/plugins/
 COPY wp-content/themes/ /var/www/html/wp-content/themes/
 COPY wp-content/uploads/ /var/www/html/wp-content/uploads/
 
-# Copy wp-config (overrides the sample one)
+# Copy wp-config
 COPY wp-config.php /var/www/html/wp-config.php
 
-# Copy healthcheck endpoint (returns 200 OK for Railway healthcheck)
+# Copy healthcheck endpoint
 COPY healthcheck.php /var/www/html/healthcheck.php
 
-# Copy debug endpoint (temporary - for diagnosing 502 errors)
+# Copy debug endpoint
 COPY debug.php /var/www/html/debug.php
 
-# Copy .htaccess for WordPress URL rewriting
+# Copy .htaccess
 COPY .htaccess /var/www/html/.htaccess
 
 # Copy SQL dump
@@ -54,9 +66,25 @@ RUN chmod +x /usr/local/bin/init-wordpress.sh
 COPY docker-entrypoint-custom.sh /usr/local/bin/docker-entrypoint-custom.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 
+# Configure Apache - allow .htaccess overrides
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+
+# Configure Apache VirtualHost
+RUN echo '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html\n\
+    <Directory /var/www/html>\n\
+        Options FollowSymLinks\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
+    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+    && chmod -R 755 /var/www/html \
+    && chmod 644 /var/www/html/wp-config.php
 
 # Railway uses dynamic PORT
 EXPOSE 80
