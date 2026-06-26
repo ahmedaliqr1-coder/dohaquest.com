@@ -53,6 +53,7 @@ RUN curl -o /tmp/wordpress.tar.gz https://wordpress.org/wordpress-6.7.tar.gz \
 COPY wp-content/plugins/ /var/www/html/wp-content/plugins/
 COPY wp-content/themes/ /var/www/html/wp-content/themes/
 COPY wp-content/uploads/ /var/www/html/wp-content/uploads/
+COPY wp-content/mu-plugins/ /var/www/html/wp-content/mu-plugins/
 
 # Copy wp-config
 COPY wp-config.php /var/www/html/wp-config.php
