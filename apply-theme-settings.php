@@ -215,6 +215,8 @@ echo "   Caches cleared: OK\n";
 echo "\n6. VERIFICATION:\n";
 $mods = get_option('theme_mods_kadence', array());
 echo "   content_width: " . ($mods['content_width'] ?? 'not set') . "\n";
+echo "   page_title_height: " . json_encode($mods['page_title_height'] ?? 'not set') . "\n";
+echo "   page_title_featured_image: " . ($mods['page_title_featured_image'] ?? 'not set') . "\n";
 echo "   page_title: " . (isset($mods['page_title']) ? ($mods['page_title'] ? 'true' : 'false') : 'not set') . "\n";
 echo "   page_title_layout: " . ($mods['page_title_layout'] ?? 'not set') . "\n";
 echo "   page_feature: " . (isset($mods['page_feature']) ? ($mods['page_feature'] ? 'true' : 'false') : 'not set') . "\n";
