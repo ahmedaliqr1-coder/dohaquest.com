@@ -33,9 +33,14 @@ $railway_url = $railway_domain ? 'http://' . $railway_domain : 'http://localhost
 define( 'WP_HOME',    $railway_url );
 define( 'WP_SITEURL', $railway_url );
 
-// ** Debug ** //
-define( 'WP_DEBUG', false );
-define( 'WP_DEBUG_LOG', false );
+// ** Debug - Enable to see PHP errors in Railway logs ** //
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', false );
+@ini_set( 'display_errors', 0 );
+// Log PHP errors to stderr so they appear in Railway deploy logs
+@ini_set( 'log_errors', 1 );
+@ini_set( 'error_log', 'php://stderr' );
 
 // ** Language ** //
 define( 'WPLANG', '' );
