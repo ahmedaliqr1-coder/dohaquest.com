@@ -144,12 +144,12 @@ if ($front_page_id) {
     
     // Set Kadence page meta
     update_post_meta($front_page_id, '_kad_post_title', 'show');
-    update_post_meta($front_page_id, '_kad_post_layout', 'fullwidth');
+    update_post_meta($front_page_id, '_kad_post_layout', 'default');  // default = use theme setting (normal)
     update_post_meta($front_page_id, '_kad_post_title_layout', 'above');
     update_post_meta($front_page_id, '_kad_post_title_inner_layout', 'fullwidth');
     update_post_meta($front_page_id, '_kad_post_title_height', json_encode(array('size' => array(380, '', ''), 'unit' => array('px', 'px', 'px'))));
     update_post_meta($front_page_id, '_kad_post_title_align', 'center');
-    update_post_meta($front_page_id, '_kad_post_feature', 'above');
+    update_post_meta($front_page_id, '_kad_post_feature', 'show');  // show = use theme setting
     update_post_meta($front_page_id, '_kad_post_feature_position', 'behind');
     update_post_meta($front_page_id, '_kad_post_vertical_padding', 'show');
     update_post_meta($front_page_id, '_kad_post_transparent', 'enable');  // Force transparent header on this page
@@ -211,7 +211,8 @@ echo "   page_title_layout: " . ($mods['page_title_layout'] ?? 'not set') . "\n"
 echo "   page_feature: " . (isset($mods['page_feature']) ? ($mods['page_feature'] ? 'true' : 'false') : 'not set') . "\n";
 echo "   page_feature_position: " . ($mods['page_feature_position'] ?? 'not set') . "\n";
 echo "   link_style: " . ($mods['link_style'] ?? 'not set') . "\n";
-echo "   header_transparent: " . (isset($mods['header_transparent']) ? ($mods['header_transparent'] ? 'true' : 'false') : 'not set') . "\n";
+echo "   transparent_header_enable: " . (isset($mods['transparent_header_enable']) ? ($mods['transparent_header_enable'] ? 'true' : 'false') : 'not set') . "
+";
 echo "   palette_color_1: " . ($mods['palette_color_1'] ?? 'not set') . "\n";
 echo "   custom_logo: " . ($mods['custom_logo'] ?? 'not set') . "\n";
 echo "   nav_menu_locations: " . json_encode($mods['nav_menu_locations'] ?? null) . "\n";
