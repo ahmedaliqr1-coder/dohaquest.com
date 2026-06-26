@@ -70,7 +70,7 @@ else
 fi
 echo "Setting WordPress URLs to: $SITE_URL"
 mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
-    -e "UPDATE wp_options SET option_value='$SITE_URL' WHERE option_name='siteurl'; UPDATE wp_options SET option_value='$SITE_URL' WHERE option_name='home';" 2>/dev/null && \
+    -e "REPLACE INTO wp_options (option_name, option_value, autoload) VALUES ('siteurl', '$SITE_URL', 'yes'), ('home', '$SITE_URL', 'yes');" 2>/dev/null && \
     echo "URLs updated in database!" || echo "URL update skipped (DB may not be ready yet)"
 
 # Run WordPress initialization in background (after Apache starts)
