@@ -114,20 +114,14 @@ foreach ($new_mods as $key => $value) {
     $theme_mods[$key] = $value;
 }
 
-// Clear cache first, then use update_option for proper cache+DB update
-wp_cache_delete('theme_mods_kadence', 'options');
-wp_cache_delete('alloptions', 'options');
-// Force delete from DB to ensure fresh insert
+// Force update by deleting and re-inserting
 $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name = 'theme_mods_kadence'");
-// Now insert with proper serialization
-$ins = $wpdb->insert($wpdb->options, array(
+$result = $wpdb->insert($wpdb->options, array(
     'option_name' => 'theme_mods_kadence',
     'option_value' => serialize($theme_mods),
     'autoload' => 'yes'
 ));
-// Also update the cache
-wp_cache_set('theme_mods_kadence', $theme_mods, 'options');
-echo "2. theme_mods_kadence: " . ($ins !== false ? "OK (inserted fresh)" : "FAILED: " . $wpdb->last_error) . "\n";
+echo "2. theme_mods_kadence: " . ($result !== false ? "OK (inserted fresh)" : "FAILED: " . $wpdb->last_error) . "\n";
 echo "   Keys set: " . implode(', ', array_keys($new_mods)) . "\n";
 
 // ============================================================
@@ -150,12 +144,12 @@ if ($front_page_id) {
     
     // Set Kadence page meta
     update_post_meta($front_page_id, '_kad_post_title', 'show');
-    update_post_meta($front_page_id, '_kad_post_layout', 'default');  // default = use theme setting (normal)
+    update_post_meta($front_page_id, '_kad_post_layout', 'default');
     update_post_meta($front_page_id, '_kad_post_title_layout', 'above');
     update_post_meta($front_page_id, '_kad_post_title_inner_layout', 'fullwidth');
     update_post_meta($front_page_id, '_kad_post_title_height', json_encode(array('size' => array(380, '', ''), 'unit' => array('px', 'px', 'px'))));
     update_post_meta($front_page_id, '_kad_post_title_align', 'center');
-    update_post_meta($front_page_id, '_kad_post_feature', 'show');  // show = use theme setting
+    update_post_meta($front_page_id, '_kad_post_feature', 'show');
     update_post_meta($front_page_id, '_kad_post_feature_position', 'behind');
     update_post_meta($front_page_id, '_kad_post_vertical_padding', 'show');
     update_post_meta($front_page_id, '_kad_post_transparent', 'enable');  // Force transparent header on this page
@@ -210,9 +204,6 @@ echo "   Caches cleared: OK\n";
 // 6. Verify final state
 // ============================================================
 echo "\n6. VERIFICATION:\n";
-// Clear cache before verification to get fresh data from DB
-wp_cache_delete('theme_mods_kadence', 'options');
-wp_cache_delete('alloptions', 'options');
 $mods = get_option('theme_mods_kadence', array());
 echo "   content_width: " . ($mods['content_width'] ?? 'not set') . "\n";
 echo "   page_title: " . (isset($mods['page_title']) ? ($mods['page_title'] ? 'true' : 'false') : 'not set') . "\n";
@@ -220,8 +211,7 @@ echo "   page_title_layout: " . ($mods['page_title_layout'] ?? 'not set') . "\n"
 echo "   page_feature: " . (isset($mods['page_feature']) ? ($mods['page_feature'] ? 'true' : 'false') : 'not set') . "\n";
 echo "   page_feature_position: " . ($mods['page_feature_position'] ?? 'not set') . "\n";
 echo "   link_style: " . ($mods['link_style'] ?? 'not set') . "\n";
-echo "   transparent_header_enable: " . (isset($mods['transparent_header_enable']) ? ($mods['transparent_header_enable'] ? 'true' : 'false') : 'not set') . "
-";
+echo "   header_transparent: " . (isset($mods['header_transparent']) ? ($mods['header_transparent'] ? 'true' : 'false') : 'not set') . "\n";
 echo "   palette_color_1: " . ($mods['palette_color_1'] ?? 'not set') . "\n";
 echo "   custom_logo: " . ($mods['custom_logo'] ?? 'not set') . "\n";
 echo "   nav_menu_locations: " . json_encode($mods['nav_menu_locations'] ?? null) . "\n";
