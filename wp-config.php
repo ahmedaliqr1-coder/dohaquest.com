@@ -42,8 +42,8 @@ define( 'WP_SITEURL', $_railway_url );
 // ** Debug ** //
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
-define( 'WP_DEBUG_DISPLAY', false );
-@ini_set( 'display_errors', 0 );
+define( 'WP_DEBUG_DISPLAY', true );
+@ini_set( 'display_errors', 1 );
 @ini_set( 'log_errors', 1 );
 @ini_set( 'error_log', 'php://stderr' );
 
