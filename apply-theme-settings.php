@@ -195,9 +195,108 @@ foreach ($menus as $menu) {
 }
 
 // ============================================================
-// 5. Clear all caches
+// 5. Additional CSS - WPOS Plugin Styles + Font Awesome
 // ============================================================
-echo "\n5. Clearing caches...\n";
+echo "\n5. Adding custom CSS for WPOS plugin...\n";
+
+// The WPOS plugin CSS is not loading in Railway because the plugin files
+// may not be registered properly. We add it as WordPress additional_css.
+$wpos_css = '
+/* WPOS Plugin CSS Variables */
+:root {
+    --wpos-light-gray-color: #f2f2f2;
+    --wpos-nine-color: #999999;
+    --wpos-light-black-color: #525252;
+    --wpos-light-bg-color: #eeebe4;
+    --wpos-black-clr: #000000;
+    --wpos-white-clr: #ffffff;
+    --wpos-green-clr: #38aa4a;
+    --wpos-blue-clr: #510c76;
+    --wpos-violet-clr: #520B75;
+    --wpos-violet-hvr-clr: #6e1798;
+    --wpos-yellow-clr: #ffc107;
+    --wpos-light-sky: #e5e6f5;
+}
+/* WPOS Breadcrumb (Category Filter) CSS */
+.wpos-wc-bw-bkn-wrap ul {display: flex; list-style: none; gap: 20px; padding: 0; margin: 0; flex-wrap: wrap;}
+.wpos-wc-bw-bkn-wrap .active a, .wpos-wc-bw-bkn-wrap ul li a:hover{border-bottom: 2px solid; padding-bottom: 6px;}
+.wpos-wc-bw-bkn-wrap .wpos-wc-bw-icon-left{margin: 0px 6px 0 0; display: inline-block; position: relative;}
+.wpos-wc-bw-bkn-wrap .wpos-wc-bw-icon-right{margin:0 0 0 6px; display: inline-block; position: relative; top: 1px;}
+.wpos-wc-bw-bkn a{color: var(--wpos-nine-color);}
+.wpos-wc-bw-bkn.active a, .wpos-wc-bw-bkn a:hover{color: var(--wpos-blue-clr);}
+.wpos-wc-bw-bkn .fa-bars{top: 1px;}
+.wpos-wc-bw-bkn a{cursor: default; font-family: Montserrat, sans-serif;}
+.wpos-wc-bw-bkn-link a{cursor: pointer;}
+.wpos-wc-bw-bkn-wrap {width: 100%;}
+/* WPOS Product Category Card CSS */
+.wpos-wc-bw-product-cat.wpos-wc-bw-product-pcat{position: relative; margin-bottom: 30px; box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1); transition: background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s; border-radius: 15px 15px 15px 15px;}
+.wpos-wc-bw-product-pcat .wpos-wc-bw-product-cat-list{display: flex; align-items: center;}
+.wpos-wc-bw-product-pcat .wpos-wc-bw-cat-img-wrp{flex-basis: 35%;}
+.wpos-wc-bw-cat-cnt-wrp{flex-basis: 65%;}
+.wpos-wc-bw-cat-img-inr{position: relative;}
+.wpos-wc-bw-cat-img{position: relative; max-width: 100%; object-fit: cover; z-index: 2; min-height: 240px;}
+.wpos-wc-bw-product-pcat .wpos-wc-bw-cat-img{border-radius: 12px 0px 0px 12px;}
+.wpos-wc-bw-cat-cnt-wrp{padding: 10px 30px;}
+.wpos-wc-bw-product-pcat .wpos-wc-bw-has-cat-img .wpos-wc-bw-cat-cnt-wrp{flex-basis: 65%;}
+.wpos-wc-bw-cat-ttl, .wpos-wc-bw-cat-ttl a{font-family: Roboto Condensed, sans-serif; color: var(--wpos-blue-clr); font-size: 28px; line-height: 40px;}
+.wpos-wc-bw-product-pcat .wpos-wc-bw-cat-ttl{margin-bottom: 15px;}
+.wpos-wc-bw-product-cat:last-child {margin-bottom: 0;}
+.mwbook-book-btn{display: inline-block; background-color: var(--wpos-violet-clr); font-family: Montserrat, sans-serif; font-size: 16px; color: #FFFFFF !important; border-style: solid; border-width: 1px 1px 1px 1px; border-color: var(--wpos-violet-clr); border-radius: 10px; padding: 15px 20px; line-height: normal;}
+.mwbook-book-btn:hover{background-color: var(--wpos-violet-hvr-clr); border-color: var(--wpos-violet-hvr-clr);}
+/* Step timer wrapper */
+.wpos-wc-bw-step-timer-wrp{margin: 0 0 30px 0;}
+';
+
+// Save as WordPress additional_css (used by wp_add_inline_style)
+$existing_css = get_option('wp_css', '');
+// Check if already added
+if (strpos($existing_css, 'wpos-wc-bw-bkn-wrap') === false) {
+    $new_css = $existing_css . "\n" . $wpos_css;
+    update_option('wp_css', $new_css);
+    echo "   Custom CSS added: OK\n";
+} else {
+    // Update existing
+    update_option('wp_css', $wpos_css);
+    echo "   Custom CSS updated: OK\n";
+}
+
+// Also add Font Awesome via wp_head hook - we'll do this via a mu-plugin
+// Create mu-plugin to load Font Awesome
+$mu_plugin_dir = WP_CONTENT_DIR . '/mu-plugins';
+if (!is_dir($mu_plugin_dir)) {
+    mkdir($mu_plugin_dir, 0755, true);
+}
+$fa_plugin = $mu_plugin_dir . '/load-fontawesome.php';
+$fa_content = '<?php
+/**
+ * Load Font Awesome for WPOS plugin icons
+ */
+add_action("wp_enqueue_scripts", function() {
+    wp_enqueue_style(
+        "font-awesome-6",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css",
+        array(),
+        "6.5.0"
+    );
+    // Also enqueue WPOS plugin CSS if plugin exists
+    $wpos_css = WP_CONTENT_DIR . "/plugins/wpos-booking-and-wallet/assets/css/wpos-wc-bw-public.css";
+    if (file_exists($wpos_css)) {
+        wp_enqueue_style(
+            "wpos-wc-bw-public",
+            plugins_url("wpos-booking-and-wallet/assets/css/wpos-wc-bw-public.css"),
+            array(),
+            "1.0.2"
+        );
+    }
+});
+';
+file_put_contents($fa_plugin, $fa_content);
+echo "   Font Awesome mu-plugin created: OK\n";
+
+// ============================================================
+// 6. Clear all caches
+// ============================================================
+echo "\n6. Clearing caches...\n";
 wp_cache_flush();
 if (function_exists('kadence_get_option')) {
     // Clear Kadence cache
