@@ -61,8 +61,13 @@ echo "MySQL check done!"
 
 # Update WordPress URLs in database BEFORE starting Apache
 # This ensures Railway healthcheck gets 200 OK instead of 301 redirect
-SITE_URL="${RAILWAY_PUBLIC_DOMAIN:+https://$RAILWAY_PUBLIC_DOMAIN}"
-SITE_URL="${SITE_URL:-http://localhost:$PORT}"
+# IMPORTANT: Use http:// not https:// - Railway terminates SSL at proxy level
+# WordPress behind Railway proxy should use http:// internally
+if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
+    SITE_URL="http://$RAILWAY_PUBLIC_DOMAIN"
+else
+    SITE_URL="http://localhost:$PORT"
+fi
 echo "Setting WordPress URLs to: $SITE_URL"
 mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
     -e "UPDATE wp_options SET option_value='$SITE_URL' WHERE option_name='siteurl'; UPDATE wp_options SET option_value='$SITE_URL' WHERE option_name='home';" 2>/dev/null && \

@@ -4,8 +4,12 @@
 
 set -e
 
-SITE_URL="${RAILWAY_PUBLIC_DOMAIN:+https://$RAILWAY_PUBLIC_DOMAIN}"
-SITE_URL="${SITE_URL:-http://localhost:80}"
+# IMPORTANT: Use http:// not https:// - Railway terminates SSL at proxy level
+if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
+    SITE_URL="http://$RAILWAY_PUBLIC_DOMAIN"
+else
+    SITE_URL="http://localhost:80"
+fi
 
 # Get DB credentials
 DB_HOST="${WORDPRESS_DB_HOST:-${MYSQLHOST}:${MYSQLPORT:-3306}}"
