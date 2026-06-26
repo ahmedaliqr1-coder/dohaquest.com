@@ -375,6 +375,51 @@ body, h1, h2, h3, h4, h5, h6, p, a, button, input {
     min-width: 0 !important;
     display: block !important;
 }
+/* إصلاح زر Add to Cart - منع تكسر النص */
+.wpos-wc-add-to-cart-btn,
+.wpos-bw-product-add-to-cart a,
+a.add_to_cart_button {
+    white-space: nowrap !important;
+    word-break: normal !important;
+    overflow: visible !important;
+    display: inline-block !important;
+}
+/* على الموبايل - تغيير الـ layout لتجنب ضيق العناصر */
+@media (max-width: 600px) {
+    .wpos-bw-product-list-inr {
+        flex-wrap: wrap !important;
+    }
+    .wpos-bw-product-img-wrap {
+        width: 100px !important;
+        min-width: 100px !important;
+        max-width: 100px !important;
+    }
+    .wpos-bw-product-img-wrap img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    .wpos-bw-product-cnt-wrap {
+        flex: 1 1 calc(100% - 115px) !important;
+        min-width: 0 !important;
+    }
+    .wpos-bw-product-list .wpos-bw-meta-wrap {
+        width: 100% !important;
+        flex-basis: 100% !important;
+        order: 3 !important;
+    }
+    .wpos-bw-product-list .wpos-bw-total-price-wrap {
+        flex-basis: auto !important;
+        order: 2 !important;
+    }
+    .wpos-wc-add-to-cart-btn,
+    .wpos-bw-product-add-to-cart a {
+        width: 100% !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        white-space: nowrap !important;
+    }
+}
 </style>
 </head>
 
