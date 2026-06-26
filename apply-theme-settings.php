@@ -85,7 +85,7 @@ $new_mods = array(
     ),
     
     // Featured image: show, position behind
-    'page_feature' => true,
+    'page_feature' => false,
     'page_feature_position' => 'behind',
     'page_feature_ratio' => 'inherit',
     
@@ -158,7 +158,7 @@ if ($front_page_id) {
     update_post_meta($front_page_id, '_kad_post_title_inner_layout', 'fullwidth');
     update_post_meta($front_page_id, '_kad_post_title_height', json_encode(array('size' => array('mobile' => '', 'tablet' => '', 'desktop' => 380), 'unit' => array('desktop' => 'px', 'tablet' => 'px', 'mobile' => 'px'))));
     update_post_meta($front_page_id, '_kad_post_title_align', 'center');
-    update_post_meta($front_page_id, '_kad_post_feature', 'show');
+    update_post_meta($front_page_id, '_kad_post_feature', 'hide');
     update_post_meta($front_page_id, '_kad_post_feature_position', 'behind');
     update_post_meta($front_page_id, '_kad_post_vertical_padding', 'show');
     update_post_meta($front_page_id, '_kad_post_transparent', 'enable');  // Force transparent header on this page
