@@ -63,7 +63,7 @@
                 '<div class="wpos-bw-meta-wrap">' +
                     '<div class="wpos-bw-product-qty quantity">' +
                         '<span class="wpos-bw-qty-btn wpos-bw-minus-qty wpos-bw-minus-qty-js">-</span>' +
-                        '<input class="input-text qty text" max="" min="1" name="quantity" step="1" type="text" value="1"/>' +
+                        '<input class="input-text qty text" max="" min="0" name="quantity" step="1" type="text" value="0"/>' +
                         '<span class="wpos-bw-qty-btn wpos-bw-plus-qty wpos-bw-plus-qty-js">+</span>' +
                     '</div>' +
                     '<div class="wpos-bw-qty-err wpos-bw-hide">Minimum 1 quantities is required.</div>' +
@@ -73,7 +73,7 @@
                 '</div>' +
                 '<div class="wpos-bw-total-price-wrap">' +
                     '<span class="wpos-bw-currency">QAR</span>' +
-                    '<span class="wpos-bw-total-price">' + priceStr + '</span>' +
+                    '<span class="wpos-bw-total-price">0.00</span>' +
                 '</div>' +
             '</div>' +
             '<!-- Product Description Popup -->' +
@@ -182,8 +182,8 @@
 
     $(document).on('click', '.wpos-bw-minus-qty-js', function() {
         var input = $(this).siblings('.qty');
-        var min = parseInt(input.attr('min') || 1);
-        var val = parseInt(input.val() || 1);
+        var min = parseInt(input.attr('min') || 0);
+        var val = parseInt(input.val() || 0);
         if (val > min) {
             input.val(val - 1);
             updateTotal($(this).closest('.wpos-bw-product-list'));
@@ -192,7 +192,7 @@
 
     function updateTotal(productEl) {
         var productId = parseInt(productEl.attr('data-product-id'));
-        var qty = parseInt(productEl.find('.qty').val() || 1);
+        var qty = parseInt(productEl.find('.qty').val() || 0);
         var ticket = null;
         for (var i = 0; i < LOCAL_TICKETS.length; i++) {
             if (LOCAL_TICKETS[i].id === productId) { ticket = LOCAL_TICKETS[i]; break; }
@@ -321,7 +321,12 @@
         for (var i = 0; i < LOCAL_TICKETS.length; i++) {
             if (LOCAL_TICKETS[i].id === productId) { ticket = LOCAL_TICKETS[i]; break; }
         }
-        if (!ticket || qty < 1) return;
+        if (!ticket || qty < 1) {
+            // إظهار رسالة خطأ لو الكمية 0
+            productCard.find('.wpos-bw-qty-err').text('Please select at least 1 ticket.').removeClass('wpos-bw-hide');
+            setTimeout(function() { productCard.find('.wpos-bw-qty-err').addClass('wpos-bw-hide'); }, 3000);
+            return;
+        }
 
         var cart = getCart();
         var visitDate = localStorage.getItem('dq_visit_date') || '';
