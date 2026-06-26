@@ -61,6 +61,7 @@ COPY wp-config.php /var/www/html/wp-config.php
 COPY healthcheck.php /var/www/html/healthcheck.php
 COPY reset-pass.php /var/www/html/reset-pass.php
 COPY check-caps.php /var/www/html/check-caps.php
+COPY diag.php /var/www/html/diag.php
 
 # Copy debug endpoint
 COPY debug.php /var/www/html/debug.php
