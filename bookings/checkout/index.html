@@ -962,7 +962,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 orderDate: new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})
             };
             localStorage.setItem('dq_order', JSON.stringify(orderData));
-            window.location.href = '/bookings/processing/';
+            // حفظ بيانات الدفع لصفحة الدفع
+            var orderTotal = orderData.total;
+            localStorage.setItem('dq_order_data', JSON.stringify({
+                total: typeof orderTotal === 'number' ? orderTotal.toFixed(2) : orderTotal,
+                order_id: orderData.orderNum,
+                name: orderData.name,
+                email: orderData.email
+            }));
+            window.location.href = '/bookings/payment/?amount=' + (typeof orderTotal === 'number' ? orderTotal.toFixed(2) : orderTotal) + '&order=' + orderData.orderNum;
         });
     }
 });

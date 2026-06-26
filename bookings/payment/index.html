@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkipCash Payment</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Rubik', 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    .payment-header {
+      background-color: #520B75;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .payment-header .brand-name {
+      color: #F2B02D;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .lang-btn {
+      background: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0px 1px 4px rgba(0,0,0,0.1);
+    }
+    .lang-btn img { width: 21px; height: 16px; }
+
+    /* ===== CONTENT PARENT ===== */
+    .content-parent {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px 60px;
+      background-color: #f8f9fa;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 2px 12px rgba(0,0,0,0.08);
+    }
+
+    /* ===== MERCHANT INFO ===== */
+    .merchant-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 2px;
+    }
+    .amount-label {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      display: block;
+    }
+    .amount-label sup {
+      font-size: 0.64em;
+      font-weight: 600;
+    }
+    .merchant-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* ===== ORDER DETAILS ===== */
+    .order-toggle-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .order-toggle-btn span {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+    .chevron-icon {
+      border-radius: 30px;
+      background-color: #520B75;
+      font-size: 8px;
+      padding: 3px 4px;
+      color: #F2B02D !important;
+      transition: transform 0.2s;
+    }
+    .chevron-icon.rotated { transform: rotate(180deg); }
+
+    .order-details-collapse {
+      display: none;
+      margin-top: 6px;
+    }
+    .order-details-collapse.show { display: block; }
+    .order-details-collapse p {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 4px;
+      font-weight: 300;
+    }
+
+    /* ===== GOOGLE PAY ===== */
+    .gpay-btn-wrapper {
+      margin: 12px 0 0;
+    }
+    .gpay-mock-btn {
+      width: 100%;
+      background: white;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #3c4043;
+    }
+    .gpay-mock-btn:hover { background: #f8f9fa; }
+    .gpay-mock-btn .g-letter {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4285F4, #34A853, #FBBC05, #EA4335);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ===== PAY WITH CARD DIVIDER ===== */
+    .pay-with-card-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0 8px;
+    }
+    .pay-with-card-divider hr {
+      flex: 1;
+      border-top: 1px solid #cbd5e1;
+      opacity: 0.5;
+      max-width: 180px;
+    }
+    .pay-with-card-divider span {
+      font-size: 13px;
+      font-weight: 500;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    /* ===== PAYMENT METHOD TABS ===== */
+    .payment-methods-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .payment-method-btn {
+      flex: 1;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+      color: #94a3b8;
+    }
+    .payment-method-btn.active {
+      background-color: #520B75;
+      border-color: #520B75;
+      color: #F2B02D;
+      box-shadow: none;
+    }
+    .payment-method-btn .naps-logo {
+      width: 39px;
+      height: auto;
+      margin-bottom: 2px;
+    }
+
+    /* ===== CARD INFORMATION ===== */
+    .card-info-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .card-info-label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 400;
+    }
+    .card-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .card-icons img {
+      width: 25px;
+      height: 25px;
+      object-fit: contain;
+    }
+
+    /* ===== CARD FORM FIELDS ===== */
+    .card-fields-wrapper {
+      border-radius: 6px;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .card-field {
+      border: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #374151;
+      background: white;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .card-field:focus { border-color: #520B75; }
+    .card-field::placeholder { color: #9ca3af; }
+    .card-field-number {
+      border-radius: 6px 6px 0 0;
+      border-bottom: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-field-number input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 14px;
+      color: #374151;
+      background: transparent;
+    }
+    .card-field-number input::placeholder { color: #9ca3af; }
+    .card-field-number .card-icon-placeholder {
+      color: #9ca3af;
+      font-size: 16px;
+    }
+    .card-row {
+      display: flex;
+      border-top: 1px solid #e5e7eb;
+    }
+    .card-field-expiry {
+      flex: 1;
+      border: none;
+      border-right: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #374151;
+      outline: none;
+      background: white;
+    }
+    .card-field-expiry::placeholder { color: #9ca3af; }
+    .card-field-cvv {
+      flex: 1;
+      border: none;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #374151;
+      outline: none;
+      background: white;
+    }
+    .card-field-cvv::placeholder { color: #9ca3af; }
+    .card-field-name {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      border-radius: 0 0 6px 6px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #374151;
+      width: 100%;
+      outline: none;
+      background: white;
+    }
+    .card-field-name::placeholder { color: #9ca3af; }
+
+    /* ===== PAY BUTTON ===== */
+    .pay-btn {
+      width: 100%;
+      background-color: #e5e7eb;
+      color: #9ca3af;
+      border: none;
+      border-radius: 6px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 14px;
+      cursor: not-allowed;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .pay-btn.ready {
+      background-color: #520B75;
+      color: white;
+      cursor: pointer;
+    }
+    .pay-btn.ready:hover { background-color: #3d0857; }
+    .pay-btn.loading {
+      background-color: #520B75;
+      color: white;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    /* ===== SUCCESS OVERLAY ===== */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .success-overlay.show { display: flex; }
+    .success-card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 30px;
+      text-align: center;
+      max-width: 340px;
+      width: 90%;
+    }
+    .success-icon {
+      width: 70px;
+      height: 70px;
+      background: #22c55e;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .success-icon i { color: white; font-size: 32px; }
+    .success-title { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    .success-msg { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+    .success-back-btn {
+      background: #520B75;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* ===== ERROR MESSAGE ===== */
+    .error-msg {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #dc2626;
+      margin-top: 10px;
+    }
+    .error-msg.show { display: block; }
+
+    /* ===== DEBIT CARD SECTION ===== */
+    .debit-section {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .debit-section.show { display: block; }
+
+    @media (max-width: 480px) {
+      .content-parent { padding: 20px 12px 40px; }
+      .content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="payment-header">
+    <span class="brand-name">Doha Quest Store</span>
+    <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">
+      <span id="langLabel">العربية</span>
+      <img src="assets/QatarFlagIcon.svg" alt="Qatar Flag" id="langFlag" />
+    </button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-parent">
+    <div class="content">
+
+      <!-- MERCHANT INFO -->
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div>
+          <h2 class="merchant-name" id="merchantName">Oasis Quest</h2>
+          <span class="amount-label" id="amountLabel">
+            <span id="amountValue">235.00</span> <sup id="currencyLabel">QAR</sup>
+          </span>
+        </div>
+        <div>
+          <img class="merchant-logo" src="quest-logo.png" alt="Quest Logo" />
+        </div>
+      </div>
+
+      <!-- ORDER DETAILS TOGGLE -->
+      <div style="margin-top:4px; margin-bottom:5px;">
+        <button class="order-toggle-btn" onclick="toggleOrderDetails()" id="orderToggleBtn">
+          <span id="orderDetailsLabel">Order Details</span>
+          <i class="fas fa-chevron-down chevron-icon" id="chevronIcon"></i>
+        </button>
+        <div class="order-details-collapse" id="orderDetailsCollapse">
+          <p><strong id="orderNumLabel">Order #: <span id="orderNum">—</span></strong></p>
+          <p><strong id="orderSubjectLabel">Subject : Oasis Quest</strong></p>
+          <p><strong id="orderDescLabel">Description : You have a payment of <span id="descAmount">235.00</span> QAR from Oasis Quest</strong></p>
+        </div>
+      </div>
+
+      <!-- GOOGLE PAY -->
+      <div class="gpay-btn-wrapper">
+        <button class="gpay-mock-btn" onclick="handleGPay()">
+          <span style="font-size:18px; font-weight:700;">
+            <span style="color:#4285F4;">G</span><span style="color:#34A853;">o</span><span style="color:#FBBC05;">o</span><span style="color:#4285F4;">g</span><span style="color:#34A853;">l</span><span style="color:#EA4335;">e</span>
+          </span>
+          <span style="font-size:15px; font-weight:600; color:#3c4043; letter-spacing:-0.5px;">Pay</span>
+        </button>
+      </div>
+
+      <!-- PAY WITH CARD DIVIDER -->
+      <div class="pay-with-card-divider">
+        <hr />
+        <span id="payWithCardLabel">pay with card</span>
+        <hr />
+      </div>
+
+      <!-- PAYMENT METHOD TABS -->
+      <div class="payment-methods-row">
+        <div class="payment-method-btn active" id="creditCardBtn" onclick="switchTab('credit')">
+          <i class="fa-solid fa-credit-card"></i>
+          <span id="creditCardLabel">Credit Card</span>
+        </div>
+        <div class="payment-method-btn" id="debitCardBtn" onclick="switchTab('debit')">
+          <img src="assets/NapsLogo.png" class="naps-logo" alt="NAPS" />
+          <span id="debitCardLabel">Qatari Debit Card</span>
+        </div>
+      </div>
+
+      <!-- CREDIT CARD SECTION -->
+      <div id="creditCardSection">
+        <!-- Card Information Header -->
+        <div class="card-info-header">
+          <label class="card-info-label" id="cardInfoLabel">Card Information</label>
+          <div class="card-icons">
+            <img src="assets/Visa.svg" alt="Visa" />
+            <img src="assets/Mastercard.svg" alt="MasterCard" />
+            <img src="assets/Amex.svg" alt="American Express" />
+          </div>
+        </div>
+
+        <!-- Card Fields -->
+        <div class="card-fields-wrapper">
+          <!-- Card Number -->
+          <div class="card-field card-field-number">
+            <i class="fa-regular fa-credit-card card-icon-placeholder" id="cardTypeIcon"></i>
+            <input type="text" id="cardNumber" placeholder="xxxx xxxx xxxx xxxx"
+              maxlength="19" oninput="formatCardNumber(this)" onchange="validateCard()" />
+          </div>
+          <!-- Expiry + CVV -->
+          <div class="card-row">
+            <input type="text" class="card-field-expiry" id="cardExpiry"
+              placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" onchange="validateCard()" />
+            <input type="text" class="card-field-cvv" id="cardCVV"
+              placeholder="CVV" maxlength="4" oninput="validateCard()" />
+          </div>
+          <!-- Name -->
+          <input type="text" class="card-field-name" id="cardName"
+            placeholder="Name" oninput="validateCard()" />
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-msg" id="errorMsg">
+          <i class="fas fa-exclamation-circle me-1"></i>
+          <span id="errorText">Please check your card details and try again.</span>
+        </div>
+
+        <!-- Pay Button -->
+        <button class="pay-btn" id="payBtn" onclick="processPayment()">
+          Pay <span id="payAmountLabel">235.00</span> <sup style="font-size:0.7em;">QAR</sup>
+        </button>
+      </div>
+
+      <!-- DEBIT CARD SECTION -->
+      <div class="debit-section" id="debitCardSection">
+        <i class="fas fa-university" style="font-size:40px; color:#520B75; margin-bottom:12px;"></i>
+        <p style="font-weight:600; color:#374151; margin-bottom:6px;">Qatari Debit Card</p>
+        <p style="font-size:13px;">This payment method requires the NAPS network. Please use a Qatari bank debit card.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUCCESS OVERLAY -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <div class="success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="success-title" id="successTitle">Payment Successful!</div>
+      <div class="success-msg" id="successMsg">Your booking has been confirmed. You will receive a confirmation email shortly.</div>
+      <button class="success-back-btn" onclick="goToConfirmation()" id="successBtn">View Booking</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ===== READ PARAMS FROM URL / localStorage =====
+    const params = new URLSearchParams(window.location.search);
+    const orderData = JSON.parse(localStorage.getItem('dq_order_data') || '{}');
+    const cartData = JSON.parse(localStorage.getItem('dq_cart') || '[]');
+
+    // Set amount
+    const amount = params.get('amount') || orderData.total || '235.00';
+    const orderNum = params.get('order') || orderData.order_id || '—';
+    document.getElementById('amountValue').textContent = amount;
+    document.getElementById('payAmountLabel').textContent = amount;
+    document.getElementById('descAmount').textContent = amount;
+    document.getElementById('orderNum').textContent = orderNum;
+
+    // ===== LANGUAGE TOGGLE =====
+    let isArabic = false;
+    const translations = {
+      en: {
+        langLabel: 'العربية',
+        orderDetailsLabel: 'Order Details',
+        orderNumLabel: 'Order #: ',
+        orderSubjectLabel: 'Subject : Oasis Quest',
+        payWithCardLabel: 'pay with card',
+        creditCardLabel: 'Credit Card',
+        debitCardLabel: 'Qatari Debit Card',
+        cardInfoLabel: 'Card Information',
+        successTitle: 'Payment Successful!',
+        successMsg: 'Your booking has been confirmed. You will receive a confirmation email shortly.',
+        successBtn: 'View Booking',
+        currencyLabel: 'QAR',
+        payBtnText: 'Pay'
+      },
+      ar: {
+        langLabel: 'English',
+        orderDetailsLabel: 'تفاصيل الطلب',
+        orderNumLabel: 'رقم الطلب: ',
+        orderSubjectLabel: 'الموضوع : Oasis Quest',
+        payWithCardLabel: 'ادفع بالبطاقة',
+        creditCardLabel: 'بطاقة الائتمان',
+        debitCardLabel: 'بطاقة الخصم القطرية',
+        cardInfoLabel: 'معلومات البطاقة',
+        successTitle: 'تمت عملية الدفع بنجاح!',
+        successMsg: 'تم تأكيد حجزك. ستتلقى رسالة تأكيد على بريدك الإلكتروني قريباً.',
+        successBtn: 'عرض الحجز',
+        currencyLabel: 'ر. ق',
+        payBtnText: 'ادفع'
+      }
+    };
+
+    function toggleLanguage() {
+      isArabic = !isArabic;
+      const lang = isArabic ? 'ar' : 'en';
+      const t = translations[lang];
+      document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+      document.getElementById('langLabel').textContent = t.langLabel;
+      document.getElementById('orderDetailsLabel').textContent = t.orderDetailsLabel;
+      document.getElementById('payWithCardLabel').textContent = t.payWithCardLabel;
+      document.getElementById('creditCardLabel').textContent = t.creditCardLabel;
+      document.getElementById('debitCardLabel').textContent = t.debitCardLabel;
+      document.getElementById('cardInfoLabel').textContent = t.cardInfoLabel;
+      document.getElementById('currencyLabel').textContent = t.currencyLabel;
+      document.getElementById('successTitle').textContent = t.successTitle;
+      document.getElementById('successMsg').textContent = t.successMsg;
+      document.getElementById('successBtn').textContent = t.successBtn;
+    }
+
+    // ===== ORDER DETAILS TOGGLE =====
+    function toggleOrderDetails() {
+      const collapse = document.getElementById('orderDetailsCollapse');
+      const chevron = document.getElementById('chevronIcon');
+      collapse.classList.toggle('show');
+      chevron.classList.toggle('rotated');
+    }
+
+    // ===== TAB SWITCH =====
+    function switchTab(tab) {
+      const creditBtn = document.getElementById('creditCardBtn');
+      const debitBtn = document.getElementById('debitCardBtn');
+      const creditSection = document.getElementById('creditCardSection');
+      const debitSection = document.getElementById('debitCardSection');
+
+      if (tab === 'credit') {
+        creditBtn.classList.add('active');
+        debitBtn.classList.remove('active');
+        creditSection.style.display = 'block';
+        debitSection.classList.remove('show');
+      } else {
+        debitBtn.classList.add('active');
+        creditBtn.classList.remove('active');
+        creditSection.style.display = 'none';
+        debitSection.classList.add('show');
+      }
+    }
+
+    // ===== CARD NUMBER FORMATTING =====
+    function formatCardNumber(input) {
+      let val = input.value.replace(/\D/g, '').substring(0, 16);
+      val = val.replace(/(.{4})/g, '$1 ').trim();
+      input.value = val;
+      updateCardIcon(val.replace(/\s/g, ''));
+      validateCard();
+    }
+
+    function updateCardIcon(num) {
+      const icon = document.getElementById('cardTypeIcon');
+      if (num.startsWith('4')) {
+        icon.className = '';
+        icon.innerHTML = '<img src="assets/Visa.svg" style="width:28px;height:auto;" />';
+      } else if (num.startsWith('5') || num.startsWith('2')) {
+        icon.className = '';
+        icon.innerHTML = '<img src="assets/Mastercard.svg" style="width:28px;height:auto;" />';
+      } else if (num.startsWith('3')) {
+        icon.className = '';
+        icon.innerHTML = '<img src="assets/Amex.svg" style="width:28px;height:auto;" />';
+      } else {
+        icon.className = 'fa-regular fa-credit-card card-icon-placeholder';
+        icon.innerHTML = '';
+      }
+    }
+
+    // ===== EXPIRY FORMATTING =====
+    function formatExpiry(input) {
+      let val = input.value.replace(/\D/g, '').substring(0, 4);
+      if (val.length >= 2) val = val.substring(0,2) + '/' + val.substring(2);
+      input.value = val;
+      validateCard();
+    }
+
+    // ===== VALIDATE CARD =====
+    function validateCard() {
+      const num = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const expiry = document.getElementById('cardExpiry').value;
+      const cvv = document.getElementById('cardCVV').value;
+      const name = document.getElementById('cardName').value.trim();
+      const btn = document.getElementById('payBtn');
+      const errorMsg = document.getElementById('errorMsg');
+
+      const valid = num.length === 16 && expiry.length === 5 && cvv.length >= 3 && name.length >= 2;
+      if (valid) {
+        btn.classList.add('ready');
+        errorMsg.classList.remove('show');
+      } else {
+        btn.classList.remove('ready');
+      }
+    }
+
+    // ===== PROCESS PAYMENT =====
+    function processPayment() {
+      const btn = document.getElementById('payBtn');
+      if (!btn.classList.contains('ready')) return;
+
+      // Show loading
+      btn.classList.add('loading');
+      btn.classList.remove('ready');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing...';
+
+      // Simulate payment processing (2 seconds)
+      setTimeout(() => {
+        // Show success
+        document.getElementById('successOverlay').classList.add('show');
+      }, 2000);
+    }
+
+    // ===== GOOGLE PAY =====
+    function handleGPay() {
+      alert('Google Pay is not available in demo mode.');
+    }
+
+    // ===== GO TO CONFIRMATION =====
+    function goToConfirmation() {
+      // Save payment data for confirmation page
+      const paymentData = {
+        paid: true,
+        amount: amount,
+        order_id: orderNum,
+        payment_method: 'Credit Card',
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('dq_payment_data', JSON.stringify(paymentData));
+      window.location.href = '../confirmation/';
+    }
+  </script>
+</body>
+</html>
