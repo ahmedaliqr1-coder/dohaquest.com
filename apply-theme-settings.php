@@ -30,14 +30,16 @@ $kadence_global = array(
     ),
 );
 
-// Delete and re-insert kadence_global_settings
-$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name = 'kadence_global_settings'");
+// Add 'active' key required by Kadence palette_option()
+$kadence_global['active'] = 'palette';
+// Delete and re-insert kadence_global_palette (CORRECT option name)
+$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name = 'kadence_global_palette'");
 $result = $wpdb->insert($wpdb->options, array(
-    'option_name' => 'kadence_global_settings',
+    'option_name' => 'kadence_global_palette',
     'option_value' => wp_json_encode($kadence_global),
     'autoload' => 'yes'
 ));
-echo "1. kadence_global_settings: " . ($result !== false ? "OK" : "FAILED: " . $wpdb->last_error) . "\n";
+echo "1. kadence_global_palette: " . ($result !== false ? "OK" : "FAILED: " . $wpdb->last_error) . "\n";
 
 // ============================================================
 // 2. THEME MODS - Complete settings from original site
