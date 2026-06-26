@@ -39,6 +39,12 @@ if wp core is-installed --allow-root 2>/dev/null; then
         -e "UPDATE wp_options SET option_value='${SITE_URL}' WHERE option_name='siteurl'; UPDATE wp_options SET option_value='${SITE_URL}' WHERE option_name='home';" 2>/dev/null || \
     wp option update siteurl "$SITE_URL" --allow-root 2>/dev/null || true
     wp option update home "$SITE_URL" --allow-root 2>/dev/null || true
+    # Fix wp_user_roles via WP-CLI (bypasses object cache)
+    wp role reset administrator --allow-root 2>/dev/null || true
+    wp role reset editor --allow-root 2>/dev/null || true
+    wp role reset author --allow-root 2>/dev/null || true
+    wp role reset contributor --allow-root 2>/dev/null || true
+    wp role reset subscriber --allow-root 2>/dev/null || true
     # Ensure admin has administrator role
     wp user set-role admin administrator --allow-root 2>/dev/null || true
     echo "Done!"
