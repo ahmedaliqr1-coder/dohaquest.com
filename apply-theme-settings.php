@@ -72,8 +72,8 @@ $new_mods = array(
     'page_title_layout' => 'above',
     'page_title_inner_layout' => 'fullwidth',
     'page_title_height' => array(
-        'size' => array('desktop' => 380, 'tablet' => '', 'mobile' => ''),
-        'unit' => array('desktop' => 'px', 'tablet' => 'px', 'mobile' => 'px'),
+        'size' => array('mobile' => '', 'tablet' => '', 'desktop' => 380),
+        'unit' => array('mobile' => 'px', 'tablet' => 'px', 'desktop' => 'px'),
     ),
     'page_title_align' => 'center',
     'page_title_elements' => array('title'),
@@ -156,7 +156,7 @@ if ($front_page_id) {
     update_post_meta($front_page_id, '_kad_post_layout', 'default');
     update_post_meta($front_page_id, '_kad_post_title_layout', 'above');
     update_post_meta($front_page_id, '_kad_post_title_inner_layout', 'fullwidth');
-    update_post_meta($front_page_id, '_kad_post_title_height', json_encode(array('size' => array('desktop' => 380, 'tablet' => '', 'mobile' => ''), 'unit' => array('desktop' => 'px', 'tablet' => 'px', 'mobile' => 'px'))));
+    update_post_meta($front_page_id, '_kad_post_title_height', json_encode(array('size' => array('mobile' => '', 'tablet' => '', 'desktop' => 380), 'unit' => array('desktop' => 'px', 'tablet' => 'px', 'mobile' => 'px'))));
     update_post_meta($front_page_id, '_kad_post_title_align', 'center');
     update_post_meta($front_page_id, '_kad_post_feature', 'show');
     update_post_meta($front_page_id, '_kad_post_feature_position', 'behind');
