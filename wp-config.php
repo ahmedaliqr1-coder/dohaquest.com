@@ -25,8 +25,11 @@ define('NONCE_SALT',       'dohaquest-nonce-salt-2026-railway-fM1pV9');
 $table_prefix = 'wp_';
 
 // ** WordPress URLs ** //
+// Use http:// internally so Railway healthcheck (which connects via HTTP) gets 200 OK
+// Railway's proxy handles HTTPS termination externally
 $railway_domain = getenv('RAILWAY_PUBLIC_DOMAIN') ?: getenv('RAILWAY_SERVICE_DOHAQUEST_COM_URL') ?: '';
-$railway_url = $railway_domain ? 'https://' . $railway_domain : 'http://localhost';
+// Use http:// to avoid 301 redirect that breaks Railway healthcheck
+$railway_url = $railway_domain ? 'http://' . $railway_domain : 'http://localhost';
 define( 'WP_HOME',    $railway_url );
 define( 'WP_SITEURL', $railway_url );
 
@@ -41,6 +44,8 @@ define( 'WPLANG', '' );
 define( 'WP_MEMORY_LIMIT', '256M' );
 
 // ** HTTPS behind proxy ** //
+// Railway terminates SSL at the proxy level and forwards as HTTP internally
+// We tell WordPress it's HTTPS via the X-Forwarded-Proto header
 if ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
     $_SERVER['HTTPS'] = 'on';
 }
