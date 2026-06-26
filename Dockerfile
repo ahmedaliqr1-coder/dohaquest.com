@@ -37,6 +37,9 @@ COPY wp-config.php /var/www/html/wp-config.php
 # Copy healthcheck endpoint (returns 200 OK for Railway healthcheck)
 COPY healthcheck.php /var/www/html/healthcheck.php
 
+# Copy debug endpoint (temporary - for diagnosing 502 errors)
+COPY debug.php /var/www/html/debug.php
+
 # Copy .htaccess for WordPress URL rewriting
 COPY .htaccess /var/www/html/.htaccess
 
